@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taylor — Portrait Artist</title>
+<meta name="description" content="Taylor is a portrait artist specializing in oil paintings rooted in presence, psychology, and the radical act of truly looking at another person. Available for commissions.">
+<meta property="og:title" content="Taylor — Portrait Artist">
+<meta property="og:description" content="Portrait art rooted in presence, psychology, and the radical act of truly looking at another person.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#6B1F2A">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;1,300&family=Playfair+Display:ital,wght@1,400;1,700&display=swap&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --burgundy: #6B1F2A;
+    --burgundy-deep: #3D0A12;
+    --burgundy-mid: #8B2635;
+    --burgundy-light: #A83845;
+    --gold: #C9A96E;
+    --gold-pale: #E8D5A3;
+    --cream: #F2E8D9;
+    --near-black: #0D0608;
+    --ink: #1A0A0E;
+    --warm-grey: #6B5B5E;
+    --text-light: #D4C4B5;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  a { color: inherit; text-decoration: none; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--near-black); color: var(--cream); font-family: 'Cormorant Garamond', Georgia, serif; overflow-x: hidden; cursor: none; }
+  .cursor { position: fixed; width: 12px; height: 12px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.3s ease, height 0.3s ease; }
+  .cursor-ring { position: fixed; width: 40px; height: 40px; border: 1px solid var(--gold); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease; opacity: 0.5; }
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--near-black); }
+  ::-webkit-scrollbar-thumb { background: var(--burgundy-mid); }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 2rem 3rem; }
+nav::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(13,6,8,0.9) 0%, transparent 100%); pointer-events: none; }
+.nav-logo { font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; text-decoration: none; position: relative; z-index: 1; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; position: relative; z-index: 1; }
+.nav-links a { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-light); text-decoration: none; transition: color 0.3s ease; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.3s ease; }
+.nav-links a:hover { color: var(--gold); }
+.nav-links a:hover::after { width: 100%; }
+
+/* HERO */
+#hero { height: 100vh; position: relative; display: flex; align-items: center; overflow: hidden; background-color: var(--near-black); }
+#hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 65% 50%, rgba(107,31,42,0.35) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 20% 80%, rgba(61,10,18,0.6) 0%, transparent 60%), radial-gradient(ellipse 80% 50% at 50% 0%, rgba(13,6,8,0.8) 0%, transparent 50%); z-index: 1; pointer-events: none; }
+#hero::after { content: ''; position: absolute; inset: -50%; width: 200%; height: 200%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.08; z-index: 2; pointer-events: none; animation: grainShift 8s steps(2) infinite; }
+@keyframes grainShift { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,-1%)} 50%{transform:translate(1%,2%)} 75%{transform:translate(-1%,1%)} 100%{transform:translate(0,0)} }
+.hero-split { position: relative; z-index: 3; width: 100%; height: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+.hero-eye-panel { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.eye-frame { position: absolute; width: 110%; height: 110%; display: flex; align-items: center; justify-content: center; }
+.painted-eye { width: 85%; max-width: 600px; opacity: 0; animation: eyeReveal 2.5s cubic-bezier(0.16,1,0.3,1) 0.5s forwards; filter: drop-shadow(0 0 60px rgba(107,31,42,0.6)) drop-shadow(0 0 120px rgba(201,169,110,0.15)); }
+@keyframes eyeReveal { 0%{opacity:0;transform:scale(0.92);filter:blur(20px)} 100%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 60px rgba(107,31,42,0.6)) drop-shadow(0 0 120px rgba(201,169,110,0.15))} }
+.hero-text-panel { display: flex; flex-direction: column; justify-content: center; padding: 4rem 4rem 4rem 3rem; position: relative; }
+.hero-overline { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; opacity: 0; animation: slideUp 0.8s ease 1.2s forwards; }
+.hero-name { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(5rem,9vw,8rem); line-height: 0.9; letter-spacing: -0.02em; color: var(--cream); margin-bottom: 1.5rem; opacity: 0; animation: slideUp 1s ease 1.4s forwards; }
+.hero-name em { font-style: italic; color: var(--gold-pale); display: block; font-size: 0.65em; letter-spacing: 0.05em; padding-left: 0.15em; }
+.hero-monogram { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.3em; color: var(--burgundy-light); margin-bottom: 3rem; opacity: 0; animation: slideUp 0.8s ease 1.6s forwards; }
+.hero-statement { font-size: 1.15rem; font-weight: 300; line-height: 1.7; color: var(--text-light); max-width: 340px; border-left: 1px solid var(--burgundy-mid); padding-left: 1.5rem; margin-bottom: 3.5rem; opacity: 0; animation: slideUp 0.8s ease 1.8s forwards; }
+.hero-statement em { color: var(--gold); font-style: italic; }
+.hero-cta-row { display: flex; gap: 1.5rem; align-items: center; opacity: 0; animation: slideUp 0.8s ease 2s forwards; }
+.btn-primary { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--near-black); background: var(--gold); padding: 1rem 2rem; text-decoration: none; transition: background 0.3s ease, transform 0.2s ease; display: inline-block; }
+.btn-primary:hover { background: var(--gold-pale); transform: translateY(-2px); }
+.btn-ghost { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-light); border: 1px solid var(--warm-grey); padding: 1rem 2rem; text-decoration: none; transition: border-color 0.3s ease, color 0.3s ease, transform 0.2s ease; display: inline-block; }
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.hero-divider { position: absolute; left: 50%; top: 10%; bottom: 10%; width: 1px; background: linear-gradient(to bottom, transparent, var(--burgundy-mid) 30%, var(--burgundy-mid) 70%, transparent); z-index: 4; opacity: 0; animation: fadeIn 1s ease 2.2s forwards; }
+.scroll-nudge { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0; animation: fadeIn 1s ease 2.5s forwards; }
+.scroll-nudge span { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--warm-grey); }
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--burgundy-mid), transparent); animation: scrollPulse 2s ease infinite; }
+@keyframes scrollPulse { 0%,100%{opacity:0.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.2)} }
+@keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* SECTIONS */
+section { position: relative; }
+.section-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--burgundy-light); margin-bottom: 1rem; }
+
+/* ABOUT */
+#about-section { padding: 10rem 0; background: var(--ink); overflow: hidden; }
+.about-inner { max-width: 1200px; margin: 0 auto; padding: 0 3rem; display: grid; grid-template-columns: 1fr 1.4fr; gap: 6rem; align-items: center; }
+.about-portrait-frame { position: relative; }
+.about-portrait-img { width: 100%; aspect-ratio: 3/4; background: var(--burgundy-deep); position: relative; overflow: hidden; }
+.about-portrait-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.about-portrait-placeholder { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 35%, rgba(139,38,53,0.4) 0%, transparent 60%), radial-gradient(ellipse 100% 100% at 50% 100%, rgba(61,10,18,0.9) 0%, transparent 50%), linear-gradient(135deg, rgba(201,169,110,0.08) 0%, transparent 50%); display: flex; align-items: center; justify-content: center; }
+.about-portrait-placeholder::after { content: 'T'; font-family: 'Playfair Display', serif; font-style: italic; font-size: 12rem; color: rgba(201,169,110,0.08); user-select: none; }
+.portrait-accent { position: absolute; top: -1.5rem; right: -1.5rem; width: 100%; height: 100%; border: 1px solid var(--burgundy-mid); z-index: -1; }
+.portrait-tag { position: absolute; bottom: -1rem; left: -1rem; background: var(--burgundy); padding: 0.75rem 1.5rem; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-pale); }
+.about-heading { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2.5rem,4vw,3.5rem); line-height: 1.1; color: var(--cream); margin-bottom: 2rem; }
+.about-heading em { font-style: italic; color: var(--gold); }
+.about-body { font-size: 1.1rem; line-height: 1.85; color: var(--text-light); font-weight: 300; margin-bottom: 1.5rem; }
+.about-body strong { color: var(--cream); font-weight: 400; }
+.about-details { display: flex; gap: 3rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(107,31,42,0.3); }
+.detail-label { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--burgundy-light); margin-bottom: 0.4rem; }
+.detail-value { font-size: 1rem; color: var(--text-light); font-weight: 300; }
+
+/* GALLERY */
+#portfolio { padding: 8rem 0; background: var(--near-black); }
+.portfolio-header { max-width: 1200px; margin: 0 auto 4rem; padding: 0 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
+.portfolio-heading { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2.5rem,4vw,3.5rem); color: var(--cream); }
+.portfolio-heading em { font-style: italic; color: var(--gold); }
+.portfolio-filter { display: flex; gap: 1rem; }
+.filter-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-grey); background: none; border: 1px solid rgba(107,31,42,0.4); padding: 0.5rem 1rem; cursor: none; transition: all 0.3s ease; } .filter-btn:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
+.filter-btn.active, .filter-btn:hover { color: var(--gold); border-color: var(--burgundy-mid); background: rgba(107,31,42,0.2); }
+.gallery-grid { max-width: 1200px; margin: 0 auto; padding: 0 3rem; display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+.gallery-item { position: relative; overflow: hidden; background: var(--burgundy-deep); cursor: none; }
+.gallery-item:nth-child(1) { grid-column: 1/6; grid-row: 1; aspect-ratio: 4/5; }
+.gallery-item:nth-child(2) { grid-column: 6/9; grid-row: 1; aspect-ratio: 3/5; }
+.gallery-item:nth-child(3) { grid-column: 9/13; grid-row: 1/3; aspect-ratio: 4/7; }
+.gallery-item:nth-child(4) { grid-column: 1/4; grid-row: 2; aspect-ratio: 3/4; }
+.gallery-item:nth-child(5) { grid-column: 4/9; grid-row: 2; aspect-ratio: 5/4; }
+.gallery-item-inner { position: absolute; inset: 0; }
+.gallery-item-inner img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+.gallery-placeholder { position: absolute; inset: 0; }
+.gallery-placeholder::before { content: ''; position: absolute; border-radius: 50% 50% 40% 40%; background: rgba(201,169,110,0.06); top: 15%; left: 50%; transform: translateX(-50%); width: 55%; height: 45%; }
+.gallery-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,6,8,0.95) 0%, transparent 50%); opacity: 0; transition: opacity 0.5s ease; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; z-index: 2; }
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-item:hover .gallery-item-inner img { transform: scale(1.04); }
+.gallery-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; color: var(--cream); margin-bottom: 0.3rem; }
+.gallery-meta { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); }
+.gallery-desc { font-size: 0.85rem; color: var(--text-light); margin-top: 0.4rem; line-height: 1.5; font-weight: 300; }
+.gallery-available { position: absolute; top: 1rem; right: 1rem; background: var(--burgundy); padding: 0.3rem 0.6rem; font-family: 'DM Mono', monospace; font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-pale); z-index: 3; }
+.gallery-empty-state { grid-column: 1/-1; padding: 4rem; text-align: center; border: 1px dashed rgba(107,31,42,0.3); }
+.gallery-empty-state p { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--warm-grey); }
+
+/* STATEMENT */
+#statement { padding: 8rem 3rem; background: var(--burgundy-deep); text-align: center; position: relative; overflow: hidden; }
+#statement::before { content: '"'; position: absolute; top: -2rem; left: 50%; transform: translateX(-50%); font-family: 'Playfair Display', serif; font-size: 30rem; color: rgba(107,31,42,0.15); line-height: 1; pointer-events: none; user-select: none; }
+.statement-quote { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(1.8rem,3.5vw,2.8rem); line-height: 1.5; color: var(--cream); max-width: 800px; margin: 0 auto 2rem; position: relative; z-index: 1; }
+.statement-quote em { color: var(--gold); font-style: normal; }
+.statement-attr { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--burgundy-light); position: relative; z-index: 1; }
+
+/* COMMISSIONS */
+#commissions { padding: 8rem 0; background: var(--ink); }
+.commissions-inner { max-width: 1200px; margin: 0 auto; padding: 0 3rem; display: grid; grid-template-columns: 1.2fr 1fr; gap: 6rem; align-items: start; }
+.commissions-heading { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2.5rem,4vw,3.5rem); color: var(--cream); margin-bottom: 1.5rem; line-height: 1.1; }
+.commissions-heading em { font-style: italic; color: var(--gold); }
+.commissions-body { font-size: 1.05rem; line-height: 1.85; color: var(--text-light); font-weight: 300; margin-bottom: 1.5rem; }
+.commissions-status { display: inline-flex; align-items: center; gap: 0.6rem; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; padding: 0.5rem 1rem; border: 1px solid; margin-bottom: 2rem; }
+.commissions-status.open { color: #7BC47F; border-color: rgba(123,196,127,0.3); background: rgba(123,196,127,0.08); }
+.commissions-status.closed { color: var(--warm-grey); border-color: rgba(107,91,94,0.3); background: rgba(107,91,94,0.08); }
+.commissions-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pricing-tiers { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2.5rem; }
+.pricing-tier { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border: 1px solid rgba(107,31,42,0.2); background: rgba(107,31,42,0.05); }
+.tier-name { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--cream); }
+.tier-price { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--gold); }
+.process-steps { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; }
+.process-step { display: flex; gap: 1.5rem; align-items: flex-start; }
+.step-number { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--burgundy-light); padding-top: 0.2rem; flex-shrink: 0; width: 2rem; }
+.step-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--cream); margin-bottom: 0.3rem; }
+.step-desc { font-family: 'DM Mono', monospace; font-size: 0.65rem; line-height: 1.7; color: var(--warm-grey); letter-spacing: 0.03em; }
+.commission-form-panel { background: rgba(107,31,42,0.1); border: 1px solid rgba(107,31,42,0.3); padding: 3rem; position: sticky; top: 6rem; }
+.form-heading { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.6rem; color: var(--cream); margin-bottom: 2rem; }
+.form-group { margin-bottom: 1.5rem; }
+.form-label { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-light); display: block; margin-bottom: 0.5rem; }
+.form-input, .form-textarea, .form-select { width: 100%; background: rgba(13,6,8,0.5); border: 1px solid rgba(107,31,42,0.4); color: var(--cream); font-family: 'Cormorant Garamond', serif; font-size: 1rem; padding: 0.75rem 1rem; outline: none; transition: border-color 0.3s ease; cursor: none; }
+.form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--gold); }
+.form-textarea { resize: vertical; min-height: 100px; }
+.form-select option { background: var(--ink); }
+.form-submit { width: 100%; background: var(--burgundy); color: var(--cream); border: none; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; padding: 1.1rem; cursor: none; transition: background 0.3s ease, transform 0.2s ease; margin-top: 0.5rem; }
+.form-submit:hover { background: var(--burgundy-mid); transform: translateY(-1px); }
+
+/* CONTACT */
+#contact { padding: 6rem 3rem 4rem; background: var(--near-black); border-top: 1px solid rgba(107,31,42,0.2); }
+.contact-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4rem; padding-bottom: 4rem; border-bottom: 1px solid rgba(107,31,42,0.2); margin-bottom: 3rem; }
+.contact-block-heading { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--burgundy-light); margin-bottom: 1.5rem; }
+.contact-name-large { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-style: italic; font-size: 2.5rem; color: var(--cream); line-height: 1; margin-bottom: 0.5rem; }
+.contact-tagline { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--warm-grey); text-transform: uppercase; }
+.contact-links { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.contact-links a { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-light); text-decoration: none; transition: color 0.3s ease; display: flex; align-items: center; gap: 0.75rem; }
+.contact-links a::before { content: '→'; color: var(--burgundy-light); font-size: 0.7rem; transition: transform 0.3s ease; }
+.contact-links a:hover { color: var(--gold); }
+.contact-links a:hover::before { transform: translateX(4px); color: var(--gold); }
+.social-links { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.social-links a { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-light); text-decoration: none; transition: color 0.3s ease; }
+.social-links a:hover { color: var(--gold); }
+.footer-bottom { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.footer-mark { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--burgundy-light); }
+.footer-copy { font-family: 'DM Mono', monospace; font-size: 0.5rem; letter-spacing: 0.2em; color: var(--warm-grey); }
+
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.9s ease, transform 0.9s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.35s; }
+.section-hidden { display: none !important; }
+
+@media (max-width: 900px) {
+.cursor, .cursor-ring { display: none; }
+body { cursor: auto; }
+.hero-split { grid-template-columns: 1fr; position: relative; }
+.hero-eye-panel { position: absolute; inset: 0; opacity: 0.18; z-index: 0; }
+.hero-text-panel { position: relative; z-index: 5; padding: 7rem 2rem 6rem; justify-content: center; height: 100%; min-height: 100vh; }
+.hero-name { font-size: clamp(3.5rem, 14vw, 6rem); }
+.hero-statement { max-width: 100%; }
+.hero-cta-row { flex-direction: column; align-items: flex-start; gap: 1rem; margin-bottom: 4rem; }
+.btn-primary, .btn-ghost { width: 100%; text-align: center; }
+.hero-divider { display: none; }
+.scroll-nudge { bottom: 1.5rem; }
+nav { padding: 1.25rem 1.5rem; }
+.nav-links { gap: 1.25rem; }
+.nav-links a { font-size: 0.6rem; }
+.about-inner, .commissions-inner { grid-template-columns: 1fr; gap: 3rem; }
+#about-section { padding: 6rem 0; }
+.about-inner { padding: 0 1.5rem; }
+.contact-inner { grid-template-columns: 1fr; gap: 2rem; }
+#contact { padding: 4rem 1.5rem 3rem; }
+.commissions-inner { padding: 0 1.5rem; }
+.commission-form-panel { position: static; padding: 2rem 1.5rem; }
+.gallery-grid { grid-template-columns: 1fr 1fr; padding: 0 1.5rem; gap: 1rem; }
+.gallery-item:nth-child(1) { grid-column: 1/2; grid-row: auto; aspect-ratio: 4/5; }
+.gallery-item:nth-child(2) { grid-column: 2/3; grid-row: auto; aspect-ratio: 4/5; }
+.gallery-item:nth-child(3) { grid-column: 1/3; grid-row: auto; aspect-ratio: 16/9; }
+.gallery-item:nth-child(4) { grid-column: 1/2; grid-row: auto; aspect-ratio: 4/5; }
+.gallery-item:nth-child(5) { grid-column: 2/3; grid-row: auto; aspect-ratio: 4/5; }
+.gallery-overlay { opacity: 1; background: linear-gradient(to top, rgba(13,6,8,0.9) 0%, transparent 60%); }
+#statement { padding: 5rem 1.5rem; }
+.portfolio-header { padding: 0 1.5rem; flex-direction: column; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; }
+}
+</style>
+
+</head>
+<body>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav>
+  <a href="#hero" class="nav-logo">TST</a>
+  <ul class="nav-links">
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#about-section">About</a></li>
+    <li><a href="#commissions">Commissions</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-split">
+    <div class="hero-eye-panel">
+      <div class="eye-frame">
+        <svg class="painted-eye" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decorative painted eye illustration">
+          <defs>
+            <radialGradient id="irisGrad" cx="50%" cy="45%" r="50%">
+              <stop offset="0%" stop-color="#C9A96E" stop-opacity="0.9"/>
+              <stop offset="30%" stop-color="#8B2635" stop-opacity="0.85"/>
+              <stop offset="70%" stop-color="#3D0A12" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#0D0608"/>
+            </radialGradient>
+            <radialGradient id="pupilGrad" cx="45%" cy="40%" r="50%">
+              <stop offset="0%" stop-color="#1a0508"/><stop offset="100%" stop-color="#0D0608"/>
+            </radialGradient>
+            <filter id="painterly">
+              <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="5" seed="8" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+            <filter id="softBlur"><feGaussianBlur stdDeviation="1.5"/></filter>
+            <radialGradient id="scleraGrad" cx="50%" cy="40%" r="55%">
+              <stop offset="0%" stop-color="#F2E8D9" stop-opacity="0.9"/>
+              <stop offset="70%" stop-color="#D4C4B5" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#A8948A" stop-opacity="0.6"/>
+            </radialGradient>
+            <linearGradient id="lidTop" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#0D0608"/>
+              <stop offset="60%" stop-color="#3D0A12" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </linearGradient>
+            <linearGradient id="lidBot" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="transparent"/>
+              <stop offset="60%" stop-color="#3D0A12" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#0D0608"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="300" cy="200" rx="230" ry="100" fill="url(#scleraGrad)" filter="url(#painterly)"/>
+          <g id="eyeMotionGroup">
+            <circle cx="300" cy="198" r="82" fill="url(#irisGrad)" filter="url(#painterly)"/>
+            <circle cx="300" cy="198" r="75" fill="none" stroke="rgba(201,169,110,0.15)" stroke-width="1.5"/>
+            <circle cx="300" cy="198" r="60" fill="none" stroke="rgba(107,31,42,0.3)" stroke-width="1"/>
+            <circle cx="300" cy="198" r="45" fill="none" stroke="rgba(201,169,110,0.1)" stroke-width="0.8"/>
+            <g opacity="0.3" filter="url(#softBlur)">
+              <line x1="300" y1="120" x2="300" y2="198" stroke="#C9A96E" stroke-width="0.8"/>
+              <line x1="358" y1="140" x2="315" y2="198" stroke="#C9A96E" stroke-width="0.8"/>
+              <line x1="378" y1="198" x2="300" y2="198" stroke="#C9A96E" stroke-width="0.8"/>
+              <line x1="358" y1="256" x2="315" y2="198" stroke="#C9A96E" stroke-width="0.8"/>
+              <line x1="242" y1="140" x2="285" y2="198" stroke="#C9A96E" stroke-width="0.8"/>
+              <line x1="222" y1="198" x2="300" y2="198" stroke="#C9A96E" stroke-width="0.8"/>
+              <line x1="242" y1="256" x2="285" y2="198" stroke="#C9A96E" stroke-width="0.8"/>
+              <line x1="330" y1="128" x2="305" y2="198" stroke="#A83845" stroke-width="0.6"/>
+              <line x1="270" y1="128" x2="295" y2="198" stroke="#A83845" stroke-width="0.6"/>
+            </g>
+            <circle cx="300" cy="198" r="34" fill="url(#pupilGrad)"/>
+            <ellipse cx="278" cy="178" rx="10" ry="7" fill="rgba(232,213,163,0.7)" filter="url(#softBlur)" transform="rotate(-20 278 178)"/>
+            <circle cx="308" cy="188" r="3.5" fill="rgba(242,232,217,0.4)" filter="url(#softBlur)"/>
+          </g>
+          <path d="M 70,200 Q 200,70 300,80 Q 400,70 530,200 L 600,150 L 600,0 L 0,0 Z" fill="url(#lidTop)" filter="url(#painterly)"/>
+          <path d="M 70,200 Q 200,320 300,310 Q 400,320 530,200 L 600,260 L 600,400 L 0,400 Z" fill="url(#lidBot)" filter="url(#painterly)"/>
+          <g stroke="#0D0608" stroke-width="2" opacity="0.9">
+            <path d="M 95,175 Q 80,148 75,125" fill="none" stroke-linecap="round"/>
+            <path d="M 120,155 Q 110,128 108,105" fill="none" stroke-linecap="round"/>
+            <path d="M 150,140 Q 145,112 148,89" fill="none" stroke-linecap="round"/>
+            <path d="M 185,128 Q 185,100 192,77" fill="none" stroke-linecap="round"/>
+            <path d="M 222,120 Q 226,92 238,70" fill="none" stroke-linecap="round"/>
+            <path d="M 260,115 Q 268,87 285,67" fill="none" stroke-linecap="round"/>
+            <path d="M 300,112 Q 300,84 312,64" fill="none" stroke-linecap="round"/>
+            <path d="M 340,115 Q 348,88 360,70" fill="none" stroke-linecap="round"/>
+            <path d="M 378,120 Q 390,95 405,78" fill="none" stroke-linecap="round"/>
+            <path d="M 413,128 Q 428,105 445,91" fill="none" stroke-linecap="round"/>
+            <path d="M 445,140 Q 462,120 480,108" fill="none" stroke-linecap="round"/>
+            <path d="M 472,155 Q 490,137 508,128" fill="none" stroke-linecap="round"/>
+            <path d="M 495,172 Q 514,157 530,150" fill="none" stroke-linecap="round"/>
+          </g>
+          <line x1="70" y1="200" x2="530" y2="200" stroke="rgba(201,169,110,0.08)" stroke-width="0.5"/>
+        </svg>
+      </div>
+    </div>
+    <div class="hero-text-panel">
+      <p class="hero-overline">Portrait Artist</p>
+      <h1 class="hero-name">Taylor<em id="heroTagline">sees you.</em></h1>
+      <p class="hero-monogram">TST — Est. Oil on Canvas</p>
+      <p class="hero-statement">Portraiture rooted in <em>presence, psychology,</em> and the radical act of truly looking at another person.</p>
+      <div class="hero-cta-row">
+        <a href="#portfolio" class="btn-primary">View Work</a>
+        <a href="#commissions" class="btn-ghost">Commission a Portrait</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-divider"></div>
+  <div class="scroll-nudge"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<section id="about-section">
+  <div class="about-inner">
+    <div class="about-portrait-frame reveal">
+      <div class="about-portrait-img">
+        <div class="about-portrait-placeholder" id="aboutPortraitPlaceholder"></div>
+        <img id="aboutPortraitImg" src="" alt="Taylor — Portrait Artist" loading="lazy" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="portrait-accent"></div>
+      <div class="portrait-tag" id="portraitTag">Oil — Mixed — Portrait</div>
+    </div>
+    <div class="about-text">
+      <p class="section-label reveal">About the Artist</p>
+      <h2 class="about-heading reveal reveal-delay-1" id="aboutHeading">Painting the <em>interior life</em> of a face.</h2>
+      <p class="about-body reveal reveal-delay-2" id="aboutBody1">Taylor is a portrait artist whose practice lives at the intersection of <strong>psychology, intimacy, and oil paint</strong>. Every portrait begins with a question: what does this person carry in their eyes when no one is asking them to perform?</p>
+      <p class="about-body reveal reveal-delay-2" id="aboutBody2">Their work is rich in both surface and subtext — layers of glazed oil that build depth the way memory builds meaning. Drawing on a lifelong fascination with the human face as a site of story, Taylor's paintings demand you stay.</p>
+      <div class="about-details reveal reveal-delay-3">
+        <div class="detail-item"><div class="detail-label">Medium</div><div class="detail-value" id="detailMedium">Oil on Canvas</div></div>
+        <div class="detail-item"><div class="detail-label">Specialty</div><div class="detail-value" id="detailSpecialty">Portraiture</div></div>
+        <div class="detail-item"><div class="detail-label">Based In</div><div class="detail-value" id="detailLocation">United States</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="portfolio">
+  <div class="portfolio-header reveal">
+    <div>
+      <p class="section-label">Selected Works</p>
+      <h2 class="portfolio-heading">The <em>Gallery</em></h2>
+    </div>
+    <div class="portfolio-filter">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="portraits">Portraits</button>
+      <button class="filter-btn" data-filter="available">Available</button>
+    </div>
+  </div>
+  <div class="gallery-grid" id="galleryGrid"></div>
+</section>
+
+<section id="statement">
+  <blockquote class="statement-quote reveal" id="statementQuote">"Every face I paint is an act of <em>witness</em> — saying to someone: I see you, fully, and I am not looking away."</blockquote>
+  <p class="statement-attr reveal reveal-delay-1">— Taylor</p>
+</section>
+
+<section id="commissions">
+  <div class="commissions-inner">
+    <div>
+      <p class="section-label reveal">Work With Taylor</p>
+      <h2 class="commissions-heading reveal reveal-delay-1">Commission a <em>portrait.</em></h2>
+      <div id="commissionsStatusBadge" class="commissions-status open reveal reveal-delay-1">Commissions Open</div>
+      <p class="commissions-body reveal reveal-delay-2" id="commissionsBody1">A Taylor portrait is not documentation. It is interpretation — a distillation of what your face holds when the light falls at the right angle and you forget to hide the interesting parts.</p>
+      <p class="commissions-body reveal reveal-delay-2" id="commissionsBody2">Portraits begin at conversation and end at something you'll want to keep forever.</p>
+      <div class="pricing-tiers reveal reveal-delay-2" id="pricingTiers"></div>
+      <div class="process-steps" id="processSteps">
+        <div class="process-step reveal reveal-delay-1"><div class="step-number">01</div><div class="step-content"><div class="step-title">Inquiry & Conversation</div><div class="step-desc">Tell Taylor about the portrait — who, why, what you want it to hold.</div></div></div>
+        <div class="process-step reveal reveal-delay-2"><div class="step-number">02</div><div class="step-content"><div class="step-title">Reference & Scope</div><div class="step-desc">Photo references, size, medium, and timeline are established together.</div></div></div>
+        <div class="process-step reveal reveal-delay-3"><div class="step-number">03</div><div class="step-content"><div class="step-title">The Work</div><div class="step-desc">Taylor works. You receive progress updates. The painting arrives.</div></div></div>
+      </div>
+    </div>
+    <div class="commission-form-panel reveal reveal-delay-2">
+      <p class="form-heading">Start a conversation.</p>
+      <div class="form-group"><label class="form-label" for="cname">Your Name</label><input class="form-input" type="text" id="cname" placeholder="Full name"></div>
+      <div class="form-group"><label class="form-label" for="cemail">Email</label><input class="form-input" type="email" id="cemail" placeholder="your@email.com"></div>
+      <div class="form-group"><label class="form-label" for="ctype">Portrait Type</label>
+        <select class="form-select" id="ctype">
+          <option value="">Select an option</option>
+          <option value="individual">Individual Portrait</option>
+          <option value="duo">Two-Person Portrait</option>
+          <option value="family">Family Portrait</option>
+          <option value="pet">Pet Portrait</option>
+          <option value="other">Something Else</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label" for="cmessage">Tell Taylor about the portrait</label><textarea class="form-textarea" id="cmessage" placeholder="Who is this portrait of? What do you want it to carry?"></textarea></div>
+      <button class="form-submit" type="button" id="commissionSubmit" onclick="submitInquiry()">Send Inquiry →</button>
+      <div id="formMsg" style="display:none;margin-top:0.75rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;padding:0.75rem 1rem;border:1px solid;"></div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <p class="contact-block-heading">The Artist</p>
+      <p class="contact-name-large">Taylor</p>
+      <p class="contact-tagline">TST — Portrait Artist</p>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <p class="contact-block-heading">Navigate</p>
+      <ul class="contact-links">
+        <li><a href="#portfolio">Gallery & Work</a></li>
+        <li><a href="#about-section">About Taylor</a></li>
+        <li><a href="#commissions">Commissions</a></li>
+      </ul>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <p class="contact-block-heading">Follow & Connect</p>
+      <ul class="social-links" id="socialLinks">
+        <li><a href="https://www.instagram.com/_tstarts" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.tiktok.com/@tstarts" target="_blank" rel="noopener">TikTok</a></li>
+        <li><a href="https://youtube.com/@tstarts" target="_blank" rel="noopener">YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-mark">TST — © 2025 Taylor</p>
+    <p class="footer-copy">All works original. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+const DEFAULTS = {
+  paintings: [
+    { id: 1, title: 'Study in Amber', medium: 'Oil on Canvas', dimensions: '24×30 in', available: true, imageUrl: '', description: '' },
+    { id: 2, title: 'The Weight of a Glance', medium: 'Oil on Canvas', dimensions: '16×20 in', available: false, imageUrl: '', description: '' },
+    { id: 3, title: 'Before the Answer', medium: 'Oil on Canvas', dimensions: '30×40 in', available: true, imageUrl: '', description: '' },
+    { id: 4, title: 'Sunday, Interior', medium: 'Oil on Board', dimensions: '12×16 in', available: false, imageUrl: '', description: '' },
+    { id: 5, title: 'Known by the Eyes', medium: 'Oil on Canvas', dimensions: '36×48 in', available: true, imageUrl: '', description: '' },
+  ],
+  about: { portraitUrl: '', portraitTag: 'Oil — Mixed — Portrait', heading: 'Painting the interior life of a face.', body1: 'Taylor is a portrait artist whose practice lives at the intersection of psychology, intimacy, and oil paint. Every portrait begins with a question: what does this person carry in their eyes when no one is asking them to perform?', body2: "Their work is rich in both surface and subtext — layers of glazed oil that build depth the way memory builds meaning. Drawing on a lifelong fascination with the human face as a site of story, Taylor's paintings demand you stay.", medium: 'Oil on Canvas', specialty: 'Portraiture', location: 'United States' },
+  commissions: { open: true, body1: 'A Taylor portrait is not documentation. It is interpretation — a distillation of what your face holds when the light falls at the right angle and you forget to hide the interesting parts.', body2: "Portraits begin at conversation and end at something you'll want to keep forever.", pricing: [{ name: 'Small Portrait', price: 'From $400' }, { name: 'Standard Portrait', price: 'From $800' }, { name: 'Large / Complex', price: 'From $1,500' }], turnaround: '6–10 weeks', steps: [{ title: 'Inquiry & Conversation', desc: 'Tell Taylor about the portrait — who, why, what you want it to hold.' }, { title: 'Reference & Scope', desc: 'Photo references, size, medium, and timeline are established together.' }, { title: 'The Work', desc: 'Taylor works. You receive progress updates. The painting arrives.' }] },
+  links: { instagram: 'https://www.instagram.com/_tstarts', tiktok: 'https://www.tiktok.com/@tstarts', youtube: 'https://youtube.com/@tstarts', email: '', shopUrl: '' },
+  appearance: { showAbout: true, showStatement: true, showCommissions: true, accentColor: '#C9A96E', primaryColor: '#6B1F2A' }
+};
+
+function loadData() {
+  try { const s = localStorage.getItem('tst_site_data'); if (s) return JSON.parse(s); } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+const data = loadData();
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function normalizeHex(hex, fallback) {
+  const value = (hex || '').trim();
+  return /^#[0-9A-Fa-f]{6}$/.test(value) ? value : fallback;
+}
+
+function mixHex(hexA, hexB, weight) {
+  const a = normalizeHex(hexA, '#000000').slice(1);
+  const b = normalizeHex(hexB, '#000000').slice(1);
+  const w = clamp(weight, 0, 1);
+  const mix = (start, end) => {
+    const s = parseInt(a.slice(start, end), 16);
+    const e = parseInt(b.slice(start, end), 16);
+    return Math.round(s + (e - s) * w).toString(16).padStart(2, '0');
+  };
+  return `#${mix(0, 2)}${mix(2, 4)}${mix(4, 6)}`;
+}
+
+function applyAppearance() {
+  const a = data.appearance || DEFAULTS.appearance;
+  const accent = normalizeHex(a.accentColor, '#C9A96E');
+  const primary = normalizeHex(a.primaryColor, '#6B1F2A');
+  document.documentElement.style.setProperty('--gold', accent);
+  document.documentElement.style.setProperty('--gold-pale', mixHex(accent, '#F6EFD9', 0.45));
+  document.documentElement.style.setProperty('--burgundy', primary);
+  document.documentElement.style.setProperty('--burgundy-mid', mixHex(primary, '#B24658', 0.35));
+  document.documentElement.style.setProperty('--burgundy-light', mixHex(primary, '#D96B78', 0.5));
+  document.documentElement.style.setProperty('--burgundy-deep', mixHex(primary, '#120508', 0.55));
+
+  document.getElementById('about-section').classList.toggle('section-hidden', !a.showAbout);
+  document.getElementById('statement').classList.toggle('section-hidden', !a.showStatement);
+  document.getElementById('commissions').classList.toggle('section-hidden', !a.showCommissions);
+}
+
+function applyAbout() {
+  const ab = data.about || DEFAULTS.about;
+  document.getElementById('aboutHeading').innerHTML = ab.heading;
+  document.getElementById('aboutBody1').textContent = ab.body1;
+  document.getElementById('aboutBody2').textContent = ab.body2;
+  document.getElementById('detailMedium').textContent = ab.medium;
+  document.getElementById('detailSpecialty').textContent = ab.specialty;
+  document.getElementById('detailLocation').textContent = ab.location;
+  document.getElementById('portraitTag').textContent = ab.portraitTag;
+  if (ab.portraitUrl) {
+    document.getElementById('aboutPortraitPlaceholder').style.display = 'none';
+    const img = document.getElementById('aboutPortraitImg');
+    img.src = ab.portraitUrl; img.style.display = 'block';
+  }
+}
+
+const gradients = [
+  'linear-gradient(160deg,#2a0810 0%,#6B1F2A 40%,#1a0508 100%)',
+  'linear-gradient(200deg,#3D0A12 0%,#8B2635 50%,#0D0608 100%)',
+  'linear-gradient(140deg,#1a0508 0%,#6B1F2A 30%,#3D0A12 70%,#0D0608 100%)',
+  'linear-gradient(180deg,#3D0A12 0%,#2a0810 60%,#0D0608 100%)',
+  'linear-gradient(120deg,#6B1F2A 0%,#1a0508 50%,#8B2635 100%)',
+];
+
+function renderGallery(filter = 'all') {
+  const grid = document.getElementById('galleryGrid');
+  let paintings = data.paintings || [];
+  if (filter === 'available') paintings = paintings.filter(p => p.available);
+  grid.innerHTML = '';
+  if (paintings.length === 0) { grid.innerHTML = '<div class="gallery-empty-state"><p>No works to display yet</p></div>'; return; }
+  paintings.forEach((p, i) => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item reveal';
+    const inner = document.createElement('div');
+    inner.className = 'gallery-item-inner';
+    if (p.imageUrl) {
+      const img = document.createElement('img');
+      img.src = p.imageUrl; img.alt = p.title; img.loading = 'lazy';
+      inner.appendChild(img);
+    } else {
+      const ph = document.createElement('div');
+      ph.className = 'gallery-placeholder';
+      ph.style.background = gradients[i % gradients.length];
+      inner.appendChild(ph);
+    }
+    const overlay = document.createElement('div');
+    overlay.className = 'gallery-overlay';
+    overlay.innerHTML = `<div class="gallery-title">${p.title}</div><div class="gallery-meta">${p.medium}${p.dimensions ? ' — '+p.dimensions : ''}</div>${p.description ? `<div class="gallery-desc">${p.description}</div>` : ''}`;
+    item.appendChild(inner);
+    if (p.available) { const b = document.createElement('div'); b.className = 'gallery-available'; b.textContent = 'Available'; item.appendChild(b); }
+    item.appendChild(overlay);
+    grid.appendChild(item);
+    item.addEventListener('mouseenter', () => { cursor.style.width='20px';cursor.style.height='20px';cursorRing.style.width='60px';cursorRing.style.height='60px';cursorRing.style.opacity='0.8'; });
+    item.addEventListener('mouseleave', () => { cursor.style.width='12px';cursor.style.height='12px';cursorRing.style.width='40px';cursorRing.style.height='40px';cursorRing.style.opacity='0.5'; });
+  });
+  grid.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+function applyCommissions() {
+  const c = data.commissions || DEFAULTS.commissions;
+  document.getElementById('commissionsBody1').textContent = c.body1;
+  document.getElementById('commissionsBody2').textContent = c.body2;
+  const badge = document.getElementById('commissionsStatusBadge');
+  badge.textContent = c.open ? 'Commissions Open' : 'Commissions Closed';
+  badge.className = 'commissions-status reveal reveal-delay-1 ' + (c.open ? 'open' : 'closed');
+  const tiersEl = document.getElementById('pricingTiers');
+  tiersEl.innerHTML = (c.pricing || []).map(t => `<div class="pricing-tier"><span class="tier-name">${t.name}</span><span class="tier-price">${t.price}</span></div>`).join('');
+  const stepsEl = document.getElementById('processSteps');
+  const steps = (c.steps && c.steps.length ? c.steps : DEFAULTS.commissions.steps);
+  stepsEl.innerHTML = steps.map((step, index) => `<div class="process-step reveal reveal-delay-${Math.min(index + 1, 3)}"><div class="step-number">${String(index + 1).padStart(2, '0')}</div><div class="step-content"><div class="step-title">${step.title}</div><div class="step-desc">${step.desc}</div></div></div>`).join('');
+}
+
+function applyLinks() {
+  const l = data.links || DEFAULTS.links;
+  const sl = document.getElementById('socialLinks');
+  sl.innerHTML = '';
+  if (l.instagram) sl.innerHTML += `<li><a href="${l.instagram}" target="_blank" rel="noopener">Instagram</a></li>`;
+  if (l.tiktok) sl.innerHTML += `<li><a href="${l.tiktok}" target="_blank" rel="noopener">TikTok</a></li>`;
+  if (l.youtube) sl.innerHTML += `<li><a href="${l.youtube}" target="_blank" rel="noopener">YouTube</a></li>`;
+  if (l.email) sl.innerHTML += `<li><a href="mailto:${l.email}">${l.email}</a></li>`;
+  if (l.shopUrl) sl.innerHTML += `<li><a href="${l.shopUrl}" target="_blank" rel="noopener">Shop</a></li>`;
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+applyAppearance(); applyAbout(); applyCommissions(); applyLinks();
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+renderGallery();
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); renderGallery(btn.dataset.filter);
+  });
+});
+
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+function animateRing() { ringX += (mouseX-ringX)*0.12; ringY += (mouseY-ringY)*0.12; cursorRing.style.left=ringX+'px'; cursorRing.style.top=ringY+'px'; requestAnimationFrame(animateRing); }
+animateRing();
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width='20px';cursor.style.height='20px';cursorRing.style.width='60px';cursorRing.style.height='60px';cursorRing.style.opacity='0.8'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width='12px';cursor.style.height='12px';cursorRing.style.width='40px';cursorRing.style.height='40px';cursorRing.style.opacity='0.5'; });
+});
+
+const eyeMotionGroup = document.getElementById('eyeMotionGroup');
+let eyeTargetX = 0, eyeTargetY = 0;
+let eyeCurrentX = 0, eyeCurrentY = 0;
+let idleTick = 0;
+let lastInteraction = performance.now();
+const EYE_X_LIMIT = 22;
+const EYE_Y_LIMIT = 12;
+const IDLE_AFTER_MS = 2600;
+
+function updateEyeTarget(clientX, clientY) {
+  const normalizedX = ((clientX / window.innerWidth) - 0.5) * 2;
+  const normalizedY = ((clientY / window.innerHeight) - 0.5) * 2;
+  eyeTargetX = clamp(normalizedX * EYE_X_LIMIT, -EYE_X_LIMIT, EYE_X_LIMIT);
+  eyeTargetY = clamp(normalizedY * EYE_Y_LIMIT, -EYE_Y_LIMIT, EYE_Y_LIMIT);
+  lastInteraction = performance.now();
+}
+
+function animateEye() {
+  const now = performance.now();
+  if (now - lastInteraction > IDLE_AFTER_MS) {
+    idleTick += 0.02;
+    eyeTargetX = Math.sin(idleTick) * 8;
+    eyeTargetY = Math.cos(idleTick * 1.7) * 4;
+  }
+
+  eyeCurrentX += (eyeTargetX - eyeCurrentX) * 0.12;
+  eyeCurrentY += (eyeTargetY - eyeCurrentY) * 0.12;
+
+  if (eyeMotionGroup) {
+    eyeMotionGroup.setAttribute('transform', `translate(${eyeCurrentX.toFixed(2)} ${eyeCurrentY.toFixed(2)})`);
+  }
+
+  requestAnimationFrame(animateEye);
+}
+animateEye();
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top = mouseY + 'px';
+  updateEyeTarget(e.clientX, e.clientY);
+});
+
+document.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  if (!touch) return;
+  updateEyeTarget(touch.clientX, touch.clientY);
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+  const touch = e.touches[0];
+  if (!touch) return;
+  updateEyeTarget(touch.clientX, touch.clientY);
+}, { passive: true });
+
+// Commission form validation
+function submitInquiry() {
+  const name = document.getElementById('cname').value.trim();
+  const email = document.getElementById('cemail').value.trim();
+  const type = document.getElementById('ctype').value;
+  const message = document.getElementById('cmessage').value.trim();
+  const msg = document.getElementById('formMsg');
+  const btn = document.getElementById('commissionSubmit');
+
+  // Clear previous state
+  msg.style.display = 'none';
+
+  // Validate
+  if (!name) { showFormMsg('Please enter your name.', 'error'); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showFormMsg('Please enter a valid email address.', 'error'); return; }
+  if (!message) { showFormMsg('Please tell Taylor about the portrait.', 'error'); return; }
+
+  // Build mailto link as the no-backend solution
+  const subject = encodeURIComponent('Commission Inquiry' + (type ? ' — ' + type : ''));
+  const body = encodeURIComponent(
+    'Name: ' + name + '\n' +
+    'Email: ' + email + '\n' +
+    (type ? 'Portrait Type: ' + type + '\n' : '') +
+    '\nMessage:\n' + message
+  );
+
+  const emailAddr = ((data.links || {}).email || '').trim();
+  if (!emailAddr) {
+    showFormMsg('Add an email in Links & Contact inside the admin page first.', 'error');
+    return;
+  }
+  const mailtoLink = 'mailto:' + (emailAddr || '') + '?subject=' + subject + '&body=' + body;
+
+  // Open mailto
+  window.location.href = mailtoLink;
+
+  // Show success
+  showFormMsg('Opening your email app… Thank you for reaching out!', 'success');
+  btn.textContent = 'Inquiry Sent ✓';
+  btn.style.background = 'rgba(123,196,127,0.2)';
+  btn.style.color = '#7BC47F';
+  setTimeout(() => {
+    btn.textContent = 'Send Inquiry →';
+    btn.style.background = '';
+    btn.style.color = '';
+    msg.style.display = 'none';
+  }, 5000);
+}
+
+function showFormMsg(text, type) {
+  const msg = document.getElementById('formMsg');
+  msg.textContent = text;
+  msg.style.display = 'block';
+  if (type === 'error') {
+    msg.style.color = '#C47B7B';
+    msg.style.borderColor = 'rgba(196,123,123,0.3)';
+    msg.style.background = 'rgba(196,123,123,0.05)';
+  } else {
+    msg.style.color = '#7BC47F';
+    msg.style.borderColor = 'rgba(123,196,127,0.3)';
+    msg.style.background = 'rgba(123,196,127,0.05)';
+  }
+}
+</script>
+
+</body>
+</html>
