@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TST Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300&display=swap" rel="stylesheet">
+<style>
+:root{--burg:#6B1F2A;--burg-mid:#8B2635;--burg-lt:#A83845;--gold:#C9A96E;--cream:#F2E8D9;--nb:#0D0608;--ink:#1A0A0E;--wg:#6B5B5E;--tl:#D4C4B5;--panel:#120508;--pb:rgba(107,31,42,0.25);--ibg:rgba(13,6,8,0.7);--green:#7BC47F;--red:#C47B7B;--sw:240px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html,body{height:100%;}
+body{background:var(--nb);color:var(--cream);font-family:"DM Mono",monospace;overflow-x:hidden;}
+
+#loginScreen{position:fixed;inset:0;background:var(–nb);display:flex;align-items:center;justify-content:center;z-index:1000;}
+#loginScreen::before{content:””;position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(107,31,42,0.18) 0%,transparent 70%);pointer-events:none;}
+.lbox{background:var(–panel);border:1px solid var(–pb);padding:3rem;width:100%;max-width:380px;position:relative;z-index:1;}
+.l-logo{font-family:“Cormorant Garamond”,serif;font-style:italic;font-size:2rem;color:var(–gold);font-weight:300;margin-bottom:0.2rem;}
+.l-sub{font-size:0.5rem;letter-spacing:0.4em;text-transform:uppercase;color:var(–wg);margin-bottom:2.5rem;}
+.l-label{font-size:0.5rem;letter-spacing:0.3em;text-transform:uppercase;color:var(–burg-lt);display:block;margin-bottom:0.4rem;}
+.l-input{width:100%;background:var(–ibg);border:1px solid var(–pb);color:var(–cream);font-family:“DM Mono”,monospace;font-size:0.85rem;padding:0.85rem 1rem;outline:none;margin-bottom:1.5rem;transition:border-color 0.3s;}
+.l-input:focus{border-color:var(–gold);}
+.l-btn{width:100%;background:var(–burg);color:var(–cream);border:none;font-family:“DM Mono”,monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;padding:1rem;cursor:pointer;transition:background 0.3s;}
+.l-btn:hover{background:var(–burg-mid);}
+.l-err{font-size:0.5rem;color:var(–red);margin-top:0.75rem;display:none;text-align:center;letter-spacing:0.1em;}
+.l-hint{font-size:0.5rem;color:var(–wg);margin-top:1.25rem;text-align:center;line-height:1.7;}
+
+#adminShell{display:none;height:100vh;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(–sw);background:var(–panel);border-right:1px solid var(–pb);display:flex;flex-direction:column;z-index:50;overflow-y:auto;}
+.sb-head{padding:2rem 1.5rem 1.5rem;border-bottom:1px solid var(–pb);}
+.sb-logo{font-family:“Cormorant Garamond”,serif;font-style:italic;font-size:1.4rem;color:var(–gold);font-weight:300;}
+.sb-tag{font-size:0.45rem;letter-spacing:0.35em;text-transform:uppercase;color:var(–wg);margin-top:0.2rem;}
+.sb-nav{padding:1rem 0;flex:1;}
+.nav-sec{font-size:0.4rem;letter-spacing:0.4em;text-transform:uppercase;color:rgba(107,31,42,0.6);padding:1rem 1.5rem 0.35rem;}
+.ni{display:flex;align-items:center;gap:0.7rem;padding:0.65rem 1.5rem;cursor:pointer;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(–wg);transition:all 0.2s;border-left:2px solid transparent;}
+.ni:hover{color:var(–tl);background:rgba(107,31,42,0.1);}
+.ni.active{color:var(–gold);border-left-color:var(–gold);background:rgba(201,169,110,0.05);}
+.sb-foot{padding:1.5rem;border-top:1px solid var(–pb);display:flex;flex-direction:column;gap:0.7rem;}
+.sb-link{font-size:0.5rem;letter-spacing:0.18em;text-transform:uppercase;color:var(–wg);text-decoration:none;transition:color 0.2s;}
+.sb-link:hover{color:var(–gold);}
+.lo-btn{font-size:0.5rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(196,123,123,0.65);background:none;border:none;cursor:pointer;text-align:left;padding:0;font-family:“DM Mono”,monospace;transition:color 0.2s;}
+.lo-btn:hover{color:var(–red);}
+
+.main{margin-left:var(–sw);height:100vh;overflow-y:auto;background:var(–nb);}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(13,6,8,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(–pb);padding:1.2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;}
+.pg-title{font-family:“Cormorant Garamond”,serif;font-style:italic;font-size:1.3rem;color:var(–cream);font-weight:300;}
+.sv-btn{background:var(–burg);color:var(–cream);border:none;font-family:“DM Mono”,monospace;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;padding:0.6rem 1.4rem;cursor:pointer;transition:background 0.3s;}
+.sv-btn:hover{background:var(–burg-mid);}
+.sv-btn.saved{background:rgba(123,196,127,0.25);color:var(–green);border:1px solid rgba(123,196,127,0.3);}
+.mc{padding:2.5rem;}
+
+.panel{display:none;}.panel.active{display:block;}
+
+.card{background:var(–panel);border:1px solid var(–pb);padding:2rem;margin-bottom:1.5rem;}
+.c-title{font-family:“Cormorant Garamond”,serif;font-size:1.1rem;color:var(–cream);margin-bottom:0.2rem;font-weight:300;}
+.c-sub{font-size:0.45rem;letter-spacing:0.3em;text-transform:uppercase;color:var(–wg);margin-bottom:1.5rem;}
+
+.fg{margin-bottom:1.2rem;}.fg:last-child{margin-bottom:0;}
+.fl{font-size:0.45rem;letter-spacing:0.35em;text-transform:uppercase;color:var(–burg-lt);display:block;margin-bottom:0.35rem;}
+.fh{font-size:0.42rem;letter-spacing:0.08em;color:var(–wg);margin-top:0.3rem;line-height:1.6;}
+.fi,.ft,.fs{width:100%;background:var(–ibg);border:1px solid var(–pb);color:var(–cream);font-family:“DM Mono”,monospace;font-size:0.72rem;padding:0.6rem 0.85rem;outline:none;transition:border-color 0.3s;letter-spacing:0.03em;}
+.fi:focus,.ft:focus,.fs:focus{border-color:var(–gold);}
+.ft{resize:vertical;min-height:75px;line-height:1.6;}
+.fs option{background:var(–ink);}
+.fr{display:grid;gap:1rem;}.fr.c2{grid-template-columns:1fr 1fr;}.fr.c3{grid-template-columns:1fr 1fr 1fr;}
+
+.tr{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid var(–pb);}
+.tr:last-child{border-bottom:none;padding-bottom:0;}
+.tl{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(–tl);}
+.td{font-size:0.42rem;letter-spacing:0.08em;color:var(–wg);margin-top:0.18rem;}
+.tog{position:relative;width:42px;height:22px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;}
+.tog-sl{position:absolute;inset:0;cursor:pointer;background:rgba(107,31,42,0.35);border:1px solid var(–pb);transition:0.3s;border-radius:22px;}
+.tog-sl::before{content:””;position:absolute;height:14px;width:14px;left:3px;top:3px;background:var(–wg);border-radius:50%;transition:0.3s;}
+.tog input:checked+.tog-sl{background:rgba(107,31,42,0.7);border-color:var(–burg-mid);}
+.tog input:checked+.tog-sl::before{transform:translateX(20px);background:var(–gold);}
+
+.cr{display:flex;align-items:center;gap:1rem;}
+.cp{width:36px;height:36px;border:1px solid var(–pb);border-radius:3px;flex-shrink:0;cursor:pointer;position:relative;overflow:hidden;}
+.cp input[type=“color”]{position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);opacity:0;cursor:pointer;border:none;padding:0;}
+.chex{font-size:0.62rem;color:var(–tl);background:var(–ibg);border:1px solid var(–pb);padding:0.5rem 0.7rem;font-family:“DM Mono”,monospace;width:105px;outline:none;transition:border-color 0.3s;}
+.chex:focus{border-color:var(–gold);}
+
+.pl{display:flex;flex-direction:column;gap:1rem;}
+.pc{background:var(–ibg);border:1px solid var(–pb);padding:1.2rem;display:grid;grid-template-columns:80px 1fr auto;gap:1.2rem;align-items:start;transition:border-color 0.2s;}
+.pc:hover{border-color:rgba(107,31,42,0.5);}
+.pt{width:80px;height:80px;background:#3D0A12;overflow:hidden;flex-shrink:0;}
+.pt img{width:100%;height:100%;object-fit:cover;}
+.ptp{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:“Cormorant Garamond”,serif;font-style:italic;font-size:1.5rem;color:rgba(201,169,110,0.18);}
+.pf{display:flex;flex-direction:column;gap:0.6rem;}
+.pf .fr{gap:0.6rem;}
+.pa{display:flex;flex-direction:column;gap:0.45rem;align-items:flex-end;}
+.ab{font-family:“DM Mono”,monospace;font-size:0.47rem;letter-spacing:0.18em;text-transform:uppercase;background:none;border:1px solid var(–pb);color:var(–wg);padding:0.38rem 0.7rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.ab:hover{border-color:var(–burg-lt);color:var(–tl);}
+.ab.danger:hover{border-color:var(–red);color:var(–red);}
+.avb{font-size:0.42rem;letter-spacing:0.22em;text-transform:uppercase;padding:0.22rem 0.45rem;border:1px solid;}
+.avb.yes{color:var(–green);border-color:rgba(123,196,127,0.3);background:rgba(123,196,127,0.07);}
+.avb.no{color:var(–wg);border-color:var(–pb);}
+.add-p-btn{width:100%;background:none;border:1px dashed rgba(107,31,42,0.4);color:var(–wg);font-family:“DM Mono”,monospace;font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;padding:1.2rem;cursor:pointer;transition:all 0.3s;margin-top:1rem;}
+.add-p-btn:hover{border-color:var(–burg-mid);color:var(–tl);background:rgba(107,31,42,0.05);}
+
+.tl-list{display:flex;flex-direction:column;gap:0.7rem;margin-bottom:1rem;}
+.tl-row{display:grid;grid-template-columns:1fr 1fr auto;gap:0.7rem;align-items:center;}
+.tl-rm{background:none;border:1px solid var(–pb);color:var(–wg);font-size:0.85rem;width:32px;height:32px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tl-rm:hover{border-color:var(–red);color:var(–red);}
+.add-t-btn{background:none;border:1px dashed rgba(107,31,42,0.28);color:var(–wg);font-family:“DM Mono”,monospace;font-size:0.47rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.55rem 1rem;cursor:pointer;transition:all 0.2s;}
+.add-t-btn:hover{border-color:var(–burg-mid);color:var(–tl);}
+
+.sr{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.sc{background:var(–panel);border:1px solid var(–pb);padding:1.2rem;}
+.sn{font-family:“Cormorant Garamond”,serif;font-size:2.5rem;color:var(–gold);font-weight:300;line-height:1;}
+.sl{font-size:0.42rem;letter-spacing:0.38em;text-transform:uppercase;color:var(–wg);margin-top:0.35rem;}
+
+.sl-list{display:flex;flex-direction:column;gap:0.7rem;}
+.sl-row{display:grid;grid-template-columns:50px 1fr 1fr;gap:0.7rem;align-items:start;}
+.sl-num{font-size:0.5rem;letter-spacing:0.18em;color:var(–burg-lt);padding-top:0.65rem;}
+
+.pp-img{width:100px;height:130px;background:#3D0A12;border:1px solid var(–pb);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:“Cormorant Garamond”,serif;font-style:italic;font-size:2rem;color:rgba(201,169,110,0.13);flex-shrink:0;}
+.pp-img img{width:100%;height:100%;object-fit:cover;}
+
+.bk-acts{display:flex;gap:1rem;flex-wrap:wrap;}
+.bk-btn{font-family:“DM Mono”,monospace;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.7rem 1.4rem;cursor:pointer;transition:all 0.3s;border:1px solid;}
+.bk-btn.exp{background:none;color:var(–gold);border-color:rgba(201,169,110,0.28);}
+.bk-btn.exp:hover{background:rgba(201,169,110,0.07);}
+.bk-btn.imp{background:none;color:var(–tl);border-color:var(–pb);}
+.bk-btn.imp:hover{border-color:var(–wg);}
+.bk-btn.rst{background:none;color:var(–red);border-color:rgba(196,123,123,0.28);}
+.bk-btn.rst:hover{background:rgba(196,123,123,0.07);}
+#importFile{display:none;}
+
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(–panel);border:1px solid var(–pb);padding:1rem 1.5rem;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:var(–tl);z-index:9999;transform:translateY(20px);opacity:0;transition:all 0.3s;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{border-color:rgba(123,196,127,0.4);color:var(–green);}
+.toast.error{border-color:rgba(196,123,123,0.4);color:var(–red);}
+</style>
+
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="lbox">
+    <div class="l-logo">Taylor</div>
+    <div class="l-sub">Site Manager &mdash; Admin Access</div>
+    <label class="l-label" for="lp">Password</label>
+    <input class="l-input" type="password" id="lp" placeholder="Enter your password">
+    <button class="l-btn" onclick="doLogin()">Enter Studio &rarr;</button>
+    <div class="l-err" id="lErr">Incorrect password. Try again.</div>
+    <div class="l-hint">First time? Default password is: <strong>tstarts2025</strong><br>Change it in Settings after logging in.</div>
+  </div>
+</div>
+
+<div id="adminShell">
+  <aside class="sidebar">
+    <div class="sb-head"><div class="sb-logo">TST Studio</div><div class="sb-tag">Site Manager</div></div>
+    <nav class="sb-nav">
+      <div class="nav-sec">Content</div>
+      <div class="ni active" data-p="dashboard" onclick="sw(this)">&#9672; Dashboard</div>
+      <div class="ni" data-p="gallery" onclick="sw(this)">&#128444; Gallery</div>
+      <div class="ni" data-p="about" onclick="sw(this)">&#9675; About</div>
+      <div class="ni" data-p="commissions" onclick="sw(this)">&#10022; Commissions</div>
+      <div class="nav-sec">Site</div>
+      <div class="ni" data-p="links" onclick="sw(this)">&#9675; Links &amp; Contact</div>
+      <div class="ni" data-p="appearance" onclick="sw(this)">&#9680; Appearance</div>
+      <div class="nav-sec">Settings</div>
+      <div class="ni" data-p="backup" onclick="sw(this)">&#11041; Backup &amp; Data</div>
+      <div class="ni" data-p="password" onclick="sw(this)">&#9643; Change Password</div>
+    </nav>
+    <div class="sb-foot">
+      <a class="sb-link" href="index.html" target="_blank">&#8599; View Live Site</a>
+      <button class="lo-btn" onclick="logout()">&#8855; Log Out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="pg-title" id="pgTitle">Dashboard</div>
+      <button class="sv-btn" id="svBtn" onclick="saveAll()">Save Changes</button>
+    </div>
+    <div class="mc">
+
+```
+  <!-- DASHBOARD -->
+  <div class="panel active" id="panel-dashboard">
+    <div class="sr">
+      <div class="sc"><div class="sn" id="stP">5</div><div class="sl">Paintings</div></div>
+      <div class="sc"><div class="sn" id="stA">3</div><div class="sl">Available</div></div>
+      <div class="sc"><div class="sn" id="stC">Open</div><div class="sl">Commissions</div></div>
+      <div class="sc"><div class="sn" id="stL">3</div><div class="sl">Social Links</div></div>
+    </div>
+    <div class="card">
+      <div class="c-title">Welcome back, Taylor &#10022;</div>
+      <div class="c-sub">Your creative space &mdash; manage everything from here</div>
+      <p style="font-size:0.6rem;line-height:1.9;color:var(--tl);margin-bottom:1.5rem;">Use the sidebar to navigate. Hit <strong style="color:var(--gold)">Save Changes</strong> at the top to apply updates to your live site.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="background:var(--ibg);border:1px solid var(--pb);padding:1.25rem;">
+          <div style="font-size:0.45rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--burg-lt);margin-bottom:0.7rem;">Quick Actions</div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;">
+            <button class="ab" onclick="swById('gallery')" style="text-align:left;width:100%;">+ Add a new painting</button>
+            <button class="ab" onclick="swById('commissions')" style="text-align:left;width:100%;">Toggle commissions open/closed</button>
+            <button class="ab" onclick="swById('links')" style="text-align:left;width:100%;">Update social links</button>
+          </div>
+        </div>
+        <div style="background:var(--ibg);border:1px solid var(--pb);padding:1.25rem;">
+          <div style="font-size:0.45rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--burg-lt);margin-bottom:0.7rem;">Tips</div>
+          <div style="font-size:0.55rem;line-height:1.9;color:var(--wg);">&#8226; Paste image URLs from Instagram, Imgur, etc.<br>&#8226; Export backups regularly from Backup &amp; Data<br>&#8226; Data saves to this browser &mdash; export to keep a file</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="panel" id="panel-gallery">
+    <div class="card">
+      <div class="c-title">Gallery Paintings</div>
+      <div class="c-sub">Add, edit, or remove works from your portfolio</div>
+      <div class="pl" id="pList"></div>
+      <button class="add-p-btn" onclick="addPainting()">+ Add New Painting</button>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="panel" id="panel-about">
+    <div class="card">
+      <div class="c-title">Portrait Photo</div>
+      <div class="c-sub">The photo shown in your About section</div>
+      <div class="fg"><label class="fl">Image URL</label><input class="fi" type="url" id="aPortUrl" placeholder="https://... paste an image link"><div class="fh">Paste a link to any photo &mdash; from Instagram, Imgur, or any image host.</div></div>
+      <div style="display:flex;gap:1.5rem;align-items:flex-start;margin-top:1rem;">
+        <div class="pp-img" id="ppBox">T</div>
+        <div style="font-size:0.52rem;line-height:1.8;color:var(--wg);">Preview updates when you paste a URL and click away from the field.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="c-title">About Text</div>
+      <div class="c-sub">Your bio and artist statement</div>
+      <div class="fg"><label class="fl">Section Heading</label><input class="fi" id="aHead"></div>
+      <div class="fr c2">
+        <div class="fg"><label class="fl">First Paragraph</label><textarea class="ft" id="aBody1" rows="5"></textarea></div>
+        <div class="fg"><label class="fl">Second Paragraph</label><textarea class="ft" id="aBody2" rows="5"></textarea></div>
+      </div>
+      <div class="fr c3" style="margin-top:0.5rem;">
+        <div class="fg"><label class="fl">Medium</label><input class="fi" id="aMed" placeholder="Oil on Canvas"></div>
+        <div class="fg"><label class="fl">Specialty</label><input class="fi" id="aSpec" placeholder="Portraiture"></div>
+        <div class="fg"><label class="fl">Based In</label><input class="fi" id="aLoc" placeholder="United States"></div>
+      </div>
+      <div class="fg" style="margin-top:0.5rem;"><label class="fl">Portrait Tag (small label on image)</label><input class="fi" id="aTag" placeholder="Oil - Mixed - Portrait"></div>
+    </div>
+  </div>
+
+  <!-- COMMISSIONS -->
+  <div class="panel" id="panel-commissions">
+    <div class="card">
+      <div class="c-title">Commission Status</div>
+      <div class="c-sub">Control whether you are accepting new commissions</div>
+      <div class="tr">
+        <div><div class="tl">Commissions Open</div><div class="td">When off, shows "Commissions Closed" on your site</div></div>
+        <label class="tog"><input type="checkbox" id="cOpen" checked><span class="tog-sl"></span></label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="c-title">Commission Copy</div>
+      <div class="c-sub">The text that describes your process</div>
+      <div class="fg"><label class="fl">First Paragraph</label><textarea class="ft" id="cBody1" rows="3"></textarea></div>
+      <div class="fg"><label class="fl">Second Paragraph</label><textarea class="ft" id="cBody2" rows="3"></textarea></div>
+      <div class="fg"><label class="fl">Turnaround Time</label><input class="fi" id="cTurn" placeholder="6-10 weeks"></div>
+    </div>
+    <div class="card">
+      <div class="c-title">Pricing Tiers</div>
+      <div class="c-sub">Pricing options shown on your site</div>
+      <div class="tl-list" id="tList"></div>
+      <button class="add-t-btn" onclick="addTier()">+ Add Pricing Tier</button>
+    </div>
+    <div class="card">
+      <div class="c-title">Process Steps</div>
+      <div class="c-sub">The numbered steps shown in your commissions section</div>
+      <div class="sl-list" id="sList"></div>
+    </div>
+  </div>
+
+  <!-- LINKS -->
+  <div class="panel" id="panel-links">
+    <div class="card">
+      <div class="c-title">Social &amp; Contact Links</div>
+      <div class="c-sub">Appear in your footer and contact section</div>
+      <div class="fr c2">
+        <div class="fg"><label class="fl">Instagram URL</label><input class="fi" type="url" id="lIG" placeholder="https://instagram.com/..."></div>
+        <div class="fg"><label class="fl">TikTok URL</label><input class="fi" type="url" id="lTT" placeholder="https://tiktok.com/@..."></div>
+        <div class="fg"><label class="fl">YouTube URL</label><input class="fi" type="url" id="lYT" placeholder="https://youtube.com/@..."></div>
+        <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="lEM" placeholder="your@email.com"></div>
+        <div class="fg"><label class="fl">Shop / Print Store URL</label><input class="fi" type="url" id="lSH" placeholder="https://..."><div class="fh">Link to Etsy, Society6, Printful, etc.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPEARANCE -->
+  <div class="panel" id="panel-appearance">
+    <div class="card">
+      <div class="c-title">Color Theme</div>
+      <div class="c-sub">Adjust your site accent colors</div>
+      <div class="fg">
+        <label class="fl">Gold / Accent Color</label>
+        <div class="cr">
+          <div class="cp" id="gPrev"><input type="color" id="gPick" value="#C9A96E" oninput="updColor('g',this.value)"></div>
+          <input class="chex" id="gHex" value="#C9A96E" oninput="updHex('g',this.value)">
+          <span style="font-size:0.47rem;color:var(--wg);">Highlights, buttons, hover</span>
+        </div>
+      </div>
+      <div class="fg" style="margin-top:1rem;">
+        <label class="fl">Burgundy / Primary Color</label>
+        <div class="cr">
+          <div class="cp" id="bPrev"><input type="color" id="bPick" value="#6B1F2A" oninput="updColor('b',this.value)"></div>
+          <input class="chex" id="bHex" value="#6B1F2A" oninput="updHex('b',this.value)">
+          <span style="font-size:0.47rem;color:var(--wg);">Buttons, badges, accents</span>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding:0.75rem;background:var(--ibg);border:1px solid var(--pb);">
+        <div style="font-size:0.42rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--wg);margin-bottom:0.5rem;">Reset</div>
+        <button class="ab" onclick="resetColors()">Restore Original Colors</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="c-title">Section Visibility</div>
+      <div class="c-sub">Toggle which sections appear on your site</div>
+      <div class="tr"><div><div class="tl">About Section</div><div class="td">Your bio and portrait photo</div></div><label class="tog"><input type="checkbox" id="shAbout" checked><span class="tog-sl"></span></label></div>
+      <div class="tr"><div><div class="tl">Statement Section</div><div class="td">The large pull-quote break</div></div><label class="tog"><input type="checkbox" id="shStmt" checked><span class="tog-sl"></span></label></div>
+      <div class="tr"><div><div class="tl">Commissions Section</div><div class="td">Pricing, process, and inquiry form</div></div><label class="tog"><input type="checkbox" id="shComm" checked><span class="tog-sl"></span></label></div>
+    </div>
+  </div>
+
+  <!-- BACKUP -->
+  <div class="panel" id="panel-backup">
+    <div class="card">
+      <div class="c-title">Backup &amp; Restore</div>
+      <div class="c-sub">Export your content to a file, or import a backup</div>
+      <p style="font-size:0.6rem;line-height:1.9;color:var(--tl);margin-bottom:1.5rem;">Your site data lives in this browser. <strong style="color:var(--gold)">Export regularly</strong> to keep a backup. If you switch devices or clear your browser, import that file to restore everything.</p>
+      <div class="bk-acts">
+        <button class="bk-btn exp" onclick="exportData()">&#8595; Export Data Backup</button>
+        <button class="bk-btn imp" onclick="document.getElementById('importFile').click()">&#8593; Import from Backup</button>
+        <input type="file" id="importFile" accept=".json" onchange="importData(event)">
+        <button class="bk-btn rst" onclick="doReset()">&#9888; Reset to Defaults</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="c-title">How to Add Painting Images</div>
+      <div class="c-sub">A quick guide</div>
+      <div style="font-size:0.58rem;line-height:2;color:var(--tl);">
+        <strong style="color:var(--gold);">Option 1 &mdash; Imgur (easiest):</strong> Upload to imgur.com (free). Right-click the image &rarr; Copy Image Address.<br>
+        <strong style="color:var(--gold);">Option 2 &mdash; Instagram:</strong> Open a post, right-click image &rarr; Copy Image Address.<br>
+        <strong style="color:var(--gold);">Option 3 &mdash; Any host:</strong> Squarespace, Cloudinary, Google Photos (with public share link).<br><br>
+        <span style="color:var(--wg);">The URL should end in .jpg, .png, or .webp &mdash; it must point directly to the image file.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSWORD -->
+  <div class="panel" id="panel-password">
+    <div class="card">
+      <div class="c-title">Change Password</div>
+      <div class="c-sub">Set a new password for your admin panel</div>
+      <div class="fg"><label class="fl">Current Password</label><input class="fi" type="password" id="curP" placeholder="Current password"></div>
+      <div class="fg"><label class="fl">New Password</label><input class="fi" type="password" id="newP" placeholder="New password (min 6 characters)"></div>
+      <div class="fg"><label class="fl">Confirm New Password</label><input class="fi" type="password" id="conP" placeholder="Repeat new password"></div>
+      <button class="ab" onclick="chgPass()" style="margin-top:0.5rem;padding:0.7rem 2rem;">Update Password</button>
+      <div id="pMsg" style="font-size:0.52rem;margin-top:0.75rem;display:none;letter-spacing:0.1em;"></div>
+    </div>
+  </div>
+
+</div>
+```
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFS = {
+  paintings:[
+    {id:1,title:'Study in Amber',medium:'Oil on Canvas',dimensions:'24x30 in',available:true,imageUrl:'',description:''},
+    {id:2,title:'The Weight of a Glance',medium:'Oil on Canvas',dimensions:'16x20 in',available:false,imageUrl:'',description:''},
+    {id:3,title:'Before the Answer',medium:'Oil on Canvas',dimensions:'30x40 in',available:true,imageUrl:'',description:''},
+    {id:4,title:'Sunday, Interior',medium:'Oil on Board',dimensions:'12x16 in',available:false,imageUrl:'',description:''},
+    {id:5,title:'Known by the Eyes',medium:'Oil on Canvas',dimensions:'36x48 in',available:true,imageUrl:'',description:''},
+  ],
+  about:{portraitUrl:'',portraitTag:'Oil - Mixed - Portrait',heading:'Painting the interior life of a face.',body1:'Taylor is a portrait artist whose practice lives at the intersection of psychology, intimacy, and oil paint. Every portrait begins with a question: what does this person carry in their eyes when no one is asking them to perform?',body2:"Their work is rich in both surface and subtext — layers of glazed oil that build depth the way memory builds meaning. Drawing on a lifelong fascination with the human face as a site of story, Taylor's paintings demand you stay.",medium:'Oil on Canvas',specialty:'Portraiture',location:'United States'},
+  commissions:{open:true,body1:'A Taylor portrait is not documentation. It is interpretation — a distillation of what your face holds when the light falls at the right angle and you forget to hide the interesting parts.',body2:"Portraits begin at conversation and end at something you'll want to keep forever.",pricing:[{name:'Small Portrait',price:'From $400'},{name:'Standard Portrait',price:'From $800'},{name:'Large / Complex',price:'From $1,500'}],turnaround:'6-10 weeks',steps:[{title:'Inquiry & Conversation',desc:'Tell Taylor about the portrait — who, why, what you want it to hold.'},{title:'Reference & Scope',desc:'Photo references, size, medium, and timeline are established together.'},{title:'The Work',desc:'Taylor works. You receive progress updates. The painting arrives.'}]},
+  links:{instagram:'https://www.instagram.com/_tstarts',tiktok:'https://www.tiktok.com/@tstarts',youtube:'https://youtube.com/@tstarts',email:'',shopUrl:''},
+  appearance:{showAbout:true,showStatement:true,showCommissions:true,accentColor:'#C9A96E',primaryColor:'#6B1F2A'}
+};
+
+let D = JSON.parse(JSON.stringify(DEFS));
+function loadD(){try{const s=localStorage.getItem('tst_site_data');if(s)D=JSON.parse(s);}catch(e){}}
+function saveD(){localStorage.setItem('tst_site_data',JSON.stringify(D));}
+function getPw(){return localStorage.getItem('tst_pw')||'tstarts2025';}
+
+function doLogin(){
+  const v=document.getElementById('lp').value;
+  if(v===getPw()){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminShell').style.display='flex';
+    loadD();fillAll();updStats();
+  }else{document.getElementById('lErr').style.display='block';document.getElementById('lp').value='';}
+}
+document.getElementById('lp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function logout(){document.getElementById('adminShell').style.display='none';document.getElementById('loginScreen').style.display='flex';document.getElementById('lp').value='';}
+
+const TITLES={dashboard:'Dashboard',gallery:'Gallery Paintings',about:'About Section',commissions:'Commissions',links:'Links & Contact',appearance:'Appearance',backup:'Backup & Data',password:'Change Password'};
+function sw(el){document.querySelectorAll('.ni').forEach(i=>i.classList.remove('active'));el.classList.add('active');const id=el.dataset.p;document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');document.getElementById('pgTitle').textContent=TITLES[id]||id;}
+function swById(id){const el=document.querySelector('[data-p="'+id+'"]');if(el)sw(el);}
+
+function saveAll(){collectAll();saveD();updStats();const b=document.getElementById('svBtn');b.textContent='Saved!';b.classList.add('saved');setTimeout(()=>{b.textContent='Save Changes';b.classList.remove('saved');},2000);toast('Changes saved!','success');}
+
+function fillAll(){fillAbout();fillGallery();fillCommissions();fillLinks();fillAppearance();}
+
+function fillAbout(){const a=D.about;
+  document.getElementById('aPortUrl').value=a.portraitUrl||'';
+  document.getElementById('aHead').value=a.heading||'';
+  document.getElementById('aBody1').value=a.body1||'';
+  document.getElementById('aBody2').value=a.body2||'';
+  document.getElementById('aMed').value=a.medium||'';
+  document.getElementById('aSpec').value=a.specialty||'';
+  document.getElementById('aLoc').value=a.location||'';
+  document.getElementById('aTag').value=a.portraitTag||'';
+  updPP(a.portraitUrl);
+  document.getElementById('aPortUrl').addEventListener('blur',e=>updPP(e.target.value));
+}
+function updPP(url){const b=document.getElementById('ppBox');b.innerHTML=url?'<img src="'+url+'" onerror="this.parentElement.innerHTML=\'T\'" alt="portrait">':'T';}
+
+function fillGallery(){
+  const list=document.getElementById('pList');list.innerHTML='';
+  D.paintings.forEach((p,i)=>list.appendChild(mkPC(p,i)));
+}
+function mkPC(p){
+  const c=document.createElement('div');c.className='pc';c.dataset.id=p.id;
+  const th=document.createElement('div');th.className='pt';
+  th.innerHTML=p.imageUrl?'<img src="'+esc(p.imageUrl)+'" onerror="this.parentElement.innerHTML=\'<div class=ptp>+</div>\">':'<div class="ptp">+</div>';
+  const f=document.createElement('div');f.className='pf';
+  f.innerHTML='<div class="fr c2"><div class="fg" style="margin:0"><label class="fl">Title</label><input class="fi p-ti" value="'+esc(p.title)+'" placeholder="Title"></div><div class="fg" style="margin:0"><label class="fl">Medium</label><input class="fi p-me" value="'+esc(p.medium)+'" placeholder="Oil on Canvas"></div></div><div class="fr c2"><div class="fg" style="margin:0"><label class="fl">Dimensions</label><input class="fi p-di" value="'+esc(p.dimensions)+'" placeholder="24x30 in"></div><div class="fg" style="margin:0"><label class="fl">Description</label><input class="fi p-de" value="'+esc(p.description)+'" placeholder="Optional note"></div></div><div class="fg" style="margin:0"><label class="fl">Image URL</label><input class="fi p-ur" value="'+esc(p.imageUrl)+'" placeholder="https://... paste image link"></div>';
+  f.querySelector('.p-ur').addEventListener('blur',e=>{const u=e.target.value;th.innerHTML=u?'<img src="'+u+'" onerror="this.parentElement.innerHTML=\'<div class=ptp>+</div>\">':'<div class="ptp">+</div>';});
+  const ac=document.createElement('div');ac.className='pa';
+  ac.innerHTML='<span class="avb '+(p.available?'yes':'no')+'">'+(p.available?'Available':'Sold/NFS')+'</span><button class="ab" onclick="togAv('+p.id+',this)">Toggle Available</button><button class="ab danger" onclick="rmP('+p.id+')">Remove</button>';
+  c.appendChild(th);c.appendChild(f);c.appendChild(ac);return c;
+}
+function togAv(id,btn){const p=D.paintings.find(x=>x.id===id);if(!p)return;p.available=!p.available;const b=btn.parentElement.querySelector('.avb');b.textContent=p.available?'Available':'Sold/NFS';b.className='avb '+(p.available?'yes':'no');}
+function rmP(id){if(!confirm('Remove this painting?'))return;D.paintings=D.paintings.filter(p=>p.id!==id);fillGallery();}
+function addPainting(){D.paintings.push({id:Date.now(),title:'New Painting',medium:'Oil on Canvas',dimensions:'',available:false,imageUrl:'',description:''});fillGallery();document.getElementById('pList').lastElementChild.scrollIntoView({behavior:'smooth'});}
+function collectGallery(){const cards=document.querySelectorAll('.pc');D.paintings=[];cards.forEach(c=>{const id=parseInt(c.dataset.id);const ex=D.paintings.find(p=>p.id===id)||{};D.paintings.push({id,title:c.querySelector('.p-ti').value,medium:c.querySelector('.p-me').value,dimensions:c.querySelector('.p-di').value,description:c.querySelector('.p-de').value,imageUrl:c.querySelector('.p-ur').value,available:ex.available||false});});}
+
+function fillCommissions(){const c=D.commissions;
+  document.getElementById('cOpen').checked=c.open!==false;
+  document.getElementById('cBody1').value=c.body1||'';
+  document.getElementById('cBody2').value=c.body2||'';
+  document.getElementById('cTurn').value=c.turnaround||'';
+  renderTiers();renderSteps();
+}
+function renderTiers(){const l=document.getElementById('tList');l.innerHTML='';(D.commissions.pricing||[]).forEach((t,i)=>{const r=document.createElement('div');r.className='tl-row';r.innerHTML='<input class="fi t-n" value="'+esc(t.name)+'" placeholder="Type"><input class="fi t-p" value="'+esc(t.price)+'" placeholder="From $400"><button class="tl-rm" onclick="rmTier('+i+')">&times;</button>';l.appendChild(r);});}
+function addTier(){D.commissions.pricing=D.commissions.pricing||[];D.commissions.pricing.push({name:'',price:''});renderTiers();}
+function rmTier(i){D.commissions.pricing.splice(i,1);renderTiers();}
+function collectTiers(){D.commissions.pricing=[];document.querySelectorAll('.tl-row').forEach(r=>{const n=r.querySelector('.t-n').value,p=r.querySelector('.t-p').value;if(n||p)D.commissions.pricing.push({name:n,price:p});});}
+function renderSteps(){const steps=D.commissions.steps||DEFS.commissions.steps;const l=document.getElementById('sList');l.innerHTML='';steps.forEach((s,i)=>{const r=document.createElement('div');r.className='sl-row';r.innerHTML='<div class="sl-num">0'+(i+1)+'</div><div class="fg" style="margin:0"><label class="fl">Title</label><input class="fi s-ti" value="'+esc(s.title)+'"></div><div class="fg" style="margin:0"><label class="fl">Description</label><input class="fi s-de" value="'+esc(s.desc)+'"></div>';l.appendChild(r);});}
+function collectSteps(){D.commissions.steps=[];document.querySelectorAll('.sl-row').forEach(r=>{D.commissions.steps.push({title:r.querySelector('.s-ti').value,desc:r.querySelector('.s-de').value});});}
+
+function fillLinks(){const l=D.links;document.getElementById('lIG').value=l.instagram||'';document.getElementById('lTT').value=l.tiktok||'';document.getElementById('lYT').value=l.youtube||'';document.getElementById('lEM').value=l.email||'';document.getElementById('lSH').value=l.shopUrl||'';}
+
+function fillAppearance(){const a=D.appearance;
+  document.getElementById('gPick').value=a.accentColor||'#C9A96E';document.getElementById('gHex').value=a.accentColor||'#C9A96E';document.getElementById('gPrev').style.background=a.accentColor||'#C9A96E';
+  document.getElementById('bPick').value=a.primaryColor||'#6B1F2A';document.getElementById('bHex').value=a.primaryColor||'#6B1F2A';document.getElementById('bPrev').style.background=a.primaryColor||'#6B1F2A';
+  document.getElementById('shAbout').checked=a.showAbout!==false;
+  document.getElementById('shStmt').checked=a.showStatement!==false;
+  document.getElementById('shComm').checked=a.showCommissions!==false;
+}
+
+function collectAll(){
+  collectGallery();collectTiers();collectSteps();
+  D.about.portraitUrl=document.getElementById('aPortUrl').value;
+  D.about.heading=document.getElementById('aHead').value;
+  D.about.body1=document.getElementById('aBody1').value;
+  D.about.body2=document.getElementById('aBody2').value;
+  D.about.medium=document.getElementById('aMed').value;
+  D.about.specialty=document.getElementById('aSpec').value;
+  D.about.location=document.getElementById('aLoc').value;
+  D.about.portraitTag=document.getElementById('aTag').value;
+  D.commissions.open=document.getElementById('cOpen').checked;
+  D.commissions.body1=document.getElementById('cBody1').value;
+  D.commissions.body2=document.getElementById('cBody2').value;
+  D.commissions.turnaround=document.getElementById('cTurn').value;
+  D.links.instagram=document.getElementById('lIG').value;
+  D.links.tiktok=document.getElementById('lTT').value;
+  D.links.youtube=document.getElementById('lYT').value;
+  D.links.email=document.getElementById('lEM').value;
+  D.links.shopUrl=document.getElementById('lSH').value;
+  D.appearance.accentColor=document.getElementById('gHex').value;
+  D.appearance.primaryColor=document.getElementById('bHex').value;
+  D.appearance.showAbout=document.getElementById('shAbout').checked;
+  D.appearance.showStatement=document.getElementById('shStmt').checked;
+  D.appearance.showCommissions=document.getElementById('shComm').checked;
+}
+
+function updColor(t,v){if(t==='g'){document.getElementById('gHex').value=v;document.getElementById('gPrev').style.background=v;}else{document.getElementById('bHex').value=v;document.getElementById('bPrev').style.background=v;}}
+function updHex(t,v){if(/^#[0-9A-Fa-f]{6}$/.test(v)){if(t==='g'){document.getElementById('gPick').value=v;document.getElementById('gPrev').style.background=v;}else{document.getElementById('bPick').value=v;document.getElementById('bPrev').style.background=v;}}}
+function resetColors(){updColor('g','#C9A96E');document.getElementById('gPick').value='#C9A96E';document.getElementById('gHex').value='#C9A96E';updColor('b','#6B1F2A');document.getElementById('bPick').value='#6B1F2A';document.getElementById('bHex').value='#6B1F2A';}
+
+function updStats(){const p=D.paintings||[];document.getElementById('stP').textContent=p.length;document.getElementById('stA').textContent=p.filter(x=>x.available).length;document.getElementById('stC').textContent=D.commissions.open?'Open':'Closed';const l=D.links;document.getElementById('stL').textContent=[l.instagram,l.tiktok,l.youtube,l.email,l.shopUrl].filter(Boolean).length;}
+
+function exportData(){collectAll();const blob=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='tst-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Backup downloaded!','success');}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{D=JSON.parse(ev.target.result);saveD();fillAll();updStats();toast('Data imported!','success');}catch{toast('Import failed — invalid file','error');}};r.readAsText(f);e.target.value='';}
+function doReset(){if(confirm('This will erase all your content and restore defaults. Sure?')){D=JSON.parse(JSON.stringify(DEFS));saveD();fillAll();updStats();toast('Reset to defaults','success');}}
+
+function chgPass(){const c=document.getElementById('curP').value,n=document.getElementById('newP').value,cf=document.getElementById('conP').value,m=document.getElementById('pMsg');m.style.display='block';if(c!==getPw()){m.style.color='var(--red)';m.textContent='Current password is incorrect.';return;}if(n.length<6){m.style.color='var(--red)';m.textContent='New password must be 6+ characters.';return;}if(n!==cf){m.style.color='var(--red)';m.textContent='Passwords do not match.';return;}localStorage.setItem('tst_pw',n);m.style.color='var(--green)';m.textContent='Password updated!';document.getElementById('curP').value='';document.getElementById('newP').value='';document.getElementById('conP').value='';}
+
+function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+</script>
+
+</body>
+</html>
