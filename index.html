@@ -186,19 +186,36 @@ section { position: relative; }
 .section-hidden { display: none !important; }
 
 @media (max-width: 900px) {
-.hero-split { grid-template-columns: 1fr; }
-.hero-eye-panel { position: absolute; inset: 0; opacity: 0.25; }
-.hero-text-panel { position: relative; z-index: 5; padding: 8rem 2rem 4rem; justify-content: flex-end; height: 100%; }
+.cursor, .cursor-ring { display: none; }
+body { cursor: auto; }
+.hero-split { grid-template-columns: 1fr; position: relative; }
+.hero-eye-panel { position: absolute; inset: 0; opacity: 0.18; z-index: 0; }
+.hero-text-panel { position: relative; z-index: 5; padding: 7rem 2rem 6rem; justify-content: center; height: 100%; min-height: 100vh; }
+.hero-name { font-size: clamp(3.5rem, 14vw, 6rem); }
+.hero-statement { max-width: 100%; }
+.hero-cta-row { flex-direction: column; align-items: flex-start; gap: 1rem; margin-bottom: 4rem; }
+.btn-primary, .btn-ghost { width: 100%; text-align: center; }
+.hero-divider { display: none; }
+.scroll-nudge { bottom: 1.5rem; }
+nav { padding: 1.25rem 1.5rem; }
+.nav-links { gap: 1.25rem; }
+.nav-links a { font-size: 0.6rem; }
 .about-inner, .commissions-inner { grid-template-columns: 1fr; gap: 3rem; }
+#about-section { padding: 6rem 0; }
+.about-inner { padding: 0 1.5rem; }
 .contact-inner { grid-template-columns: 1fr; gap: 2rem; }
-.gallery-grid { grid-template-columns: 1fr 1fr; }
-.gallery-item:nth-child(1) { grid-column: 1/2; grid-row: auto; }
-.gallery-item:nth-child(2) { grid-column: 2/3; grid-row: auto; }
+#contact { padding: 4rem 1.5rem 3rem; }
+.commissions-inner { padding: 0 1.5rem; }
+.commission-form-panel { position: static; padding: 2rem 1.5rem; }
+.gallery-grid { grid-template-columns: 1fr 1fr; padding: 0 1.5rem; gap: 1rem; }
+.gallery-item:nth-child(1) { grid-column: 1/2; grid-row: auto; aspect-ratio: 4/5; }
+.gallery-item:nth-child(2) { grid-column: 2/3; grid-row: auto; aspect-ratio: 4/5; }
 .gallery-item:nth-child(3) { grid-column: 1/3; grid-row: auto; aspect-ratio: 16/9; }
-.gallery-item:nth-child(4) { grid-column: 1/2; grid-row: auto; }
-.gallery-item:nth-child(5) { grid-column: 2/3; grid-row: auto; }
-nav { padding: 1.5rem 2rem; }
-.nav-links { gap: 1.5rem; }
+.gallery-item:nth-child(4) { grid-column: 1/2; grid-row: auto; aspect-ratio: 4/5; }
+.gallery-item:nth-child(5) { grid-column: 2/3; grid-row: auto; aspect-ratio: 4/5; }
+.gallery-overlay { opacity: 1; background: linear-gradient(to top, rgba(13,6,8,0.9) 0%, transparent 60%); }
+#statement { padding: 5rem 1.5rem; }
+.portfolio-header { padding: 0 1.5rem; flex-direction: column; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; }
 }
 </style>
 
@@ -552,12 +569,17 @@ document.querySelectorAll('a, button').forEach(el => {
   el.addEventListener('mouseleave', () => { cursor.style.width='12px';cursor.style.height='12px';cursorRing.style.width='40px';cursorRing.style.height='40px';cursorRing.style.opacity='0.5'; });
 });
 
-// EYE TRACKING — single RAF loop (fixed)
+// EYE TRACKING — unified pointer + touch (works on iPad, iPhone, desktop)
 const eye = document.querySelector('.painted-eye');
 let targetX=0, targetY=0, currentX=0, currentY=0;
 const STRENGTH = 18;
 let idleTick=0, isIdle=false, idleTimer=null;
 function resetIdle() { isIdle=false; idleTick=0; clearTimeout(idleTimer); idleTimer=setTimeout(()=>{isIdle=true;},4000); }
+function setEyeTarget(cx, cy) {
+  targetX=((cx/window.innerWidth)-0.5)*2*STRENGTH;
+  targetY=((cy/window.innerHeight)-0.5)*2*STRENGTH;
+  resetIdle();
+}
 function mainLoop() {
   if (isIdle) { idleTick+=0.008; targetX=Math.sin(idleTick)*(STRENGTH*0.5); targetY=Math.sin(idleTick*2)*(STRENGTH*0.3); }
   currentX+=(targetX-currentX)*0.08; currentY+=(targetY-currentY)*0.08;
@@ -565,15 +587,29 @@ function mainLoop() {
   requestAnimationFrame(mainLoop);
 }
 mainLoop();
-document.addEventListener('mousemove', (e) => {
-  mouseX=e.clientX; mouseY=e.clientY;
-  cursor.style.left=mouseX+'px'; cursor.style.top=mouseY+'px';
-  targetX=((e.clientX/window.innerWidth)-0.5)*2*STRENGTH;
-  targetY=((e.clientY/window.innerHeight)-0.5)*2*STRENGTH;
-  resetIdle();
+// pointermove covers mouse AND Apple Pencil AND finger on iPad all at once
+document.addEventListener('pointermove', (e) => {
+  if (e.pointerType === 'mouse') {
+    mouseX=e.clientX; mouseY=e.clientY;
+    cursor.style.left=mouseX+'px'; cursor.style.top=mouseY+'px';
+  }
+  setEyeTarget(e.clientX, e.clientY);
 });
-document.addEventListener('touchmove', (e) => { const t=e.touches[0]; targetX=((t.clientX/window.innerWidth)-0.5)*2*STRENGTH; targetY=((t.clientY/window.innerHeight)-0.5)*2*STRENGTH; resetIdle(); }, {passive:true});
-document.addEventListener('touchstart', (e) => { const t=e.touches[0]; targetX=((t.clientX/window.innerWidth)-0.5)*2*STRENGTH; targetY=((t.clientY/window.innerHeight)-0.5)*2*STRENGTH; resetIdle(); }, {passive:true});
+// touchstart catches the initial tap/touch before any move
+document.addEventListener('touchstart', (e) => {
+  const t=e.touches[0]; setEyeTarget(t.clientX, t.clientY);
+}, {passive:true});
+document.addEventListener('touchmove', (e) => {
+  const t=e.touches[0]; setEyeTarget(t.clientX, t.clientY);
+}, {passive:true});
+// DeviceOrientation as fallback for when iPad is flat/still — tilting the device moves the eye
+window.addEventListener('deviceorientation', (e) => {
+  if (!isIdle) return; // only use gyro when idle, so touch still wins
+  const x = (e.gamma || 0) / 45; // -1 to 1 based on tilt
+  const y = (e.beta  || 0) / 90 - 0.3;
+  targetX = x * STRENGTH;
+  targetY = y * STRENGTH * 0.5;
+});
 resetIdle();
 </script>
 
