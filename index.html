@@ -576,48 +576,25 @@ document.querySelectorAll('a, button').forEach(el => {
   el.addEventListener('mouseleave', () => { cursor.style.width='12px';cursor.style.height='12px';cursorRing.style.width='40px';cursorRing.style.height='40px';cursorRing.style.opacity='0.5'; });
 });
 
-// EYE TRACKING — unified pointer + touch (works on iPad, iPhone, desktop)
+// EYE — idle drift animation (gentle figure-8, no tracking)
 const eye = document.querySelector('.painted-eye');
-let targetX=0, targetY=0, currentX=0, currentY=0;
-const STRENGTH = 18;
-let idleTick=0, isIdle=false, idleTimer=null;
-function resetIdle() { isIdle=false; idleTick=0; clearTimeout(idleTimer); idleTimer=setTimeout(()=>{isIdle=true;},4000); }
-function setEyeTarget(cx, cy) {
-  targetX=((cx/window.innerWidth)-0.5)*2*STRENGTH;
-  targetY=((cy/window.innerHeight)-0.5)*2*STRENGTH;
-  resetIdle();
-}
+let currentX=0, currentY=0, idleTick=0;
+const STRENGTH = 14;
 function mainLoop() {
-  if (isIdle) { idleTick+=0.008; targetX=Math.sin(idleTick)*(STRENGTH*0.5); targetY=Math.sin(idleTick*2)*(STRENGTH*0.3); }
-  currentX+=(targetX-currentX)*0.08; currentY+=(targetY-currentY)*0.08;
-  if (eye) eye.style.transform=`translate(${currentX}px,${currentY}px)`;
+  idleTick += 0.006;
+  const targetX = Math.sin(idleTick) * (STRENGTH * 0.5);
+  const targetY = Math.sin(idleTick * 2) * (STRENGTH * 0.3);
+  currentX += (targetX - currentX) * 0.05;
+  currentY += (targetY - currentY) * 0.05;
+  if (eye) eye.style.transform = `translate(${currentX}px,${currentY}px)`;
   requestAnimationFrame(mainLoop);
 }
 mainLoop();
-// pointermove covers mouse AND Apple Pencil AND finger on iPad all at once
-document.addEventListener('pointermove', (e) => {
-  if (e.pointerType === 'mouse') {
-    mouseX=e.clientX; mouseY=e.clientY;
-    cursor.style.left=mouseX+'px'; cursor.style.top=mouseY+'px';
-  }
-  setEyeTarget(e.clientX, e.clientY);
+// Desktop mouse cursor tracking
+document.addEventListener('mousemove', (e) => {
+  mouseX=e.clientX; mouseY=e.clientY;
+  cursor.style.left=mouseX+'px'; cursor.style.top=mouseY+'px';
 });
-// touchstart catches the initial tap/touch before any move
-document.addEventListener('touchstart', (e) => {
-  const t=e.touches[0]; setEyeTarget(t.clientX, t.clientY);
-}, {passive:true});
-document.addEventListener('touchmove', (e) => {
-  const t=e.touches[0]; setEyeTarget(t.clientX, t.clientY);
-}, {passive:true});
-// DeviceOrientation as fallback for when iPad is flat/still — tilting the device moves the eye
-window.addEventListener('deviceorientation', (e) => {
-  if (!isIdle) return; // only use gyro when idle, so touch still wins
-  const x = (e.gamma || 0) / 45; // -1 to 1 based on tilt
-  const y = (e.beta  || 0) / 90 - 0.3;
-  targetX = x * STRENGTH;
-  targetY = y * STRENGTH * 0.5;
-});
-resetIdle();
 
 // Commission form validation
 function submitInquiry() {
