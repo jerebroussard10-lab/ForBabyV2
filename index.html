@@ -5,9 +5,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Taylor — Portrait Artist</title>
+<meta name="description" content="Taylor is a portrait artist specializing in oil paintings rooted in presence, psychology, and the radical act of truly looking at another person. Available for commissions.">
+<meta property="og:title" content="Taylor — Portrait Artist">
+<meta property="og:description" content="Portrait art rooted in presence, psychology, and the radical act of truly looking at another person.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#6B1F2A">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;1,300&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;1,300&family=Playfair+Display:ital,wght@1,400;1,700&display=swap&display=swap" rel="stylesheet">
 <style>
   :root {
     --burgundy: #6B1F2A;
@@ -100,7 +106,7 @@ section { position: relative; }
 .portfolio-heading { font-family: ‘Cormorant Garamond’, serif; font-weight: 300; font-size: clamp(2.5rem,4vw,3.5rem); color: var(–cream); }
 .portfolio-heading em { font-style: italic; color: var(–gold); }
 .portfolio-filter { display: flex; gap: 1rem; }
-.filter-btn { font-family: ‘DM Mono’, monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(–warm-grey); background: none; border: 1px solid rgba(107,31,42,0.4); padding: 0.5rem 1rem; cursor: none; transition: all 0.3s ease; }
+.filter-btn { font-family: ‘DM Mono’, monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(–warm-grey); background: none; border: 1px solid rgba(107,31,42,0.4); padding: 0.5rem 1rem; cursor: none; transition: all 0.3s ease; } .filter-btn:focus-visible { outline: 1px solid var(–gold); outline-offset: 3px; }
 .filter-btn.active, .filter-btn:hover { color: var(–gold); border-color: var(–burgundy-mid); background: rgba(107,31,42,0.2); }
 .gallery-grid { max-width: 1200px; margin: 0 auto; padding: 0 3rem; display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
 .gallery-item { position: relative; overflow: hidden; background: var(–burgundy-deep); cursor: none; }
@@ -152,7 +158,7 @@ section { position: relative; }
 .commission-form-panel { background: rgba(107,31,42,0.1); border: 1px solid rgba(107,31,42,0.3); padding: 3rem; position: sticky; top: 6rem; }
 .form-heading { font-family: ‘Cormorant Garamond’, serif; font-style: italic; font-size: 1.6rem; color: var(–cream); margin-bottom: 2rem; }
 .form-group { margin-bottom: 1.5rem; }
-.form-label { font-family: ‘DM Mono’, monospace; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(–burgundy-light); display: block; margin-bottom: 0.5rem; }
+.form-label { font-family: ‘DM Mono’, monospace; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(–text-light); display: block; margin-bottom: 0.5rem; }
 .form-input, .form-textarea, .form-select { width: 100%; background: rgba(13,6,8,0.5); border: 1px solid rgba(107,31,42,0.4); color: var(–cream); font-family: ‘Cormorant Garamond’, serif; font-size: 1rem; padding: 0.75rem 1rem; outline: none; transition: border-color 0.3s ease; cursor: none; }
 .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(–gold); }
 .form-textarea { resize: vertical; min-height: 100px; }
@@ -221,8 +227,8 @@ nav { padding: 1.25rem 1.5rem; }
 
 </head>
 <body>
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav>
   <a href="#hero" class="nav-logo">TST</a>
@@ -238,7 +244,7 @@ nav { padding: 1.25rem 1.5rem; }
   <div class="hero-split">
     <div class="hero-eye-panel">
       <div class="eye-frame">
-        <svg class="painted-eye" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+        <svg class="painted-eye" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decorative painted eye illustration">
           <defs>
             <radialGradient id="irisGrad" cx="50%" cy="45%" r="50%">
               <stop offset="0%" stop-color="#C9A96E" stop-opacity="0.9"/>
@@ -330,7 +336,7 @@ nav { padding: 1.25rem 1.5rem; }
     <div class="about-portrait-frame reveal">
       <div class="about-portrait-img">
         <div class="about-portrait-placeholder" id="aboutPortraitPlaceholder"></div>
-        <img id="aboutPortraitImg" src="" alt="Taylor" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <img id="aboutPortraitImg" src="" alt="Taylor — Portrait Artist" loading="lazy" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
       </div>
       <div class="portrait-accent"></div>
       <div class="portrait-tag" id="portraitTag">Oil — Mixed — Portrait</div>
@@ -399,7 +405,8 @@ nav { padding: 1.25rem 1.5rem; }
         </select>
       </div>
       <div class="form-group"><label class="form-label" for="cmessage">Tell Taylor about the portrait</label><textarea class="form-textarea" id="cmessage" placeholder="Who is this portrait of? What do you want it to carry?"></textarea></div>
-      <button class="form-submit" type="button">Send Inquiry →</button>
+      <button class="form-submit" type="button" id="commissionSubmit" onclick="submitInquiry()">Send Inquiry →</button>
+      <div id="formMsg" style="display:none;margin-top:0.75rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;padding:0.75rem 1rem;border:1px solid;"></div>
     </div>
   </div>
 </section>
@@ -611,6 +618,67 @@ window.addEventListener('deviceorientation', (e) => {
   targetY = y * STRENGTH * 0.5;
 });
 resetIdle();
+
+// Commission form validation
+function submitInquiry() {
+  const name = document.getElementById('cname').value.trim();
+  const email = document.getElementById('cemail').value.trim();
+  const type = document.getElementById('ctype').value;
+  const message = document.getElementById('cmessage').value.trim();
+  const msg = document.getElementById('formMsg');
+  const btn = document.getElementById('commissionSubmit');
+
+  // Clear previous state
+  msg.style.display = 'none';
+
+  // Validate
+  if (!name) { showFormMsg('Please enter your name.', 'error'); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showFormMsg('Please enter a valid email address.', 'error'); return; }
+  if (!message) { showFormMsg('Please tell Taylor about the portrait.', 'error'); return; }
+
+  // Build mailto link as the no-backend solution
+  const subject = encodeURIComponent('Commission Inquiry' + (type ? ' — ' + type : ''));
+  const body = encodeURIComponent(
+    'Name: ' + name + '\n' +
+    'Email: ' + email + '\n' +
+    (type ? 'Portrait Type: ' + type + '\n' : '') +
+    '\nMessage:\n' + message
+  );
+
+  const data = document.getElementById('linkEmail') ;
+  const emailAddr = (data && data.textContent.trim()) || '';
+  const mailtoLink = 'mailto:' + (emailAddr || '') + '?subject=' + subject + '&body=' + body;
+
+  // Open mailto
+  window.location.href = mailtoLink;
+
+  // Show success
+  showFormMsg('Opening your email app… Thank you for reaching out!', 'success');
+  btn.textContent = 'Inquiry Sent ✓';
+  btn.style.background = 'rgba(123,196,127,0.2)';
+  btn.style.color = '#7BC47F';
+  setTimeout(() => {
+    btn.textContent = 'Send Inquiry →';
+    btn.style.background = '';
+    btn.style.color = '';
+    msg.style.display = 'none';
+  }, 5000);
+}
+
+function showFormMsg(text, type) {
+  const msg = document.getElementById('formMsg');
+  msg.textContent = text;
+  msg.style.display = 'block';
+  if (type === 'error') {
+    msg.style.color = '#C47B7B';
+    msg.style.borderColor = 'rgba(196,123,123,0.3)';
+    msg.style.background = 'rgba(196,123,123,0.05)';
+  } else {
+    msg.style.color = '#7BC47F';
+    msg.style.borderColor = 'rgba(123,196,127,0.3)';
+    msg.style.background = 'rgba(123,196,127,0.05)';
+  }
+}
 </script>
 
 </body>
